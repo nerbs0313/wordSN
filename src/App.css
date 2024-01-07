@@ -1,0 +1,127 @@
+html {
+  --background-color: white;
+}
+
+.Box {
+  color: black;                  
+  background-color:var(--word-background-color);   
+  margin-bottom: "100px";
+
+  font-size: 25px;
+  margin: 25px;
+  height: 90px;
+  border-top: dashed 1px black;
+  display : flex;
+  flex-direction:column;
+  justify-content: space-between;
+}
+
+.black-nav{
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  
+  margin-bottom:1000px;
+  height: 40px;
+  padding: 1rem;
+  color: white;
+  background: var(--head-background-color);
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.black-nav2{
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  
+  margin-bottom:1000px;
+  height: 40px;
+  padding: 1rem;
+  color: white;
+  background: var(--head-background-color);
+  font-weight: bold;
+  display : flex;
+  flex-direction:row;
+  
+  align-items: center;
+}
+
+.Head_option{
+  font-size:20px;
+  font-weight: bold;
+  display : flex;
+  flex-direction:row;
+}
+.headingItemOption{
+  margin-left : 20px;
+}
+
+.backButton
+{
+  font-size: 50px;
+  margin-left:-20px;
+}
+
+
+.name{
+  font-size: 30px;
+  padding-left: 10px;
+}
+
+.name2{
+  font-size: 30px;
+}
+
+
+.wordColor{  
+  font-size: 25px;
+  margin-top: 25px;
+  margin-left :25px;
+  width:100%;
+  height: 90px;
+  color:var(--word-color);           
+  background-color:var(--word-background-color);;   
+  align-items: center;  
+  border-top: dashed 1px black;
+  border-bottom: dashed 1px black;
+  
+  border-left: dashed 1px black;
+  
+  text-align : center;  
+  line-height : 90px;
+}
+
+.bookmark{
+  margin-top: 25px;
+  margin-right :25px;
+  font-size: 20px;
+  color:white;
+  display : flex;
+  flex-direction:column;
+  justify-content: space-between;
+  
+  background-color:var(--word-background-color);; 
+  border-top: dashed 1px black;
+  border-bottom: dashed 1px black;
+  border-right: dashed 1px black;
+}
+
+body {
+  padding-top: 70px;
+  background-color: var(--background-color);
+  /* 생략 */
+}
+
+
+.wordComponent{
+  
+  display : flex;
+  flex-direction:row;
+}
