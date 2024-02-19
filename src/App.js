@@ -11,46 +11,69 @@ function BackToHome(props) {
     event.preventDefault();
     props.backToHome();
   }}> ＜ </h4>
-
 }
 
 function OpenBookMark(props) {
   return <h4 className="headingItemOption" onClick={function (event) {
     props.openBookMark();
-  }}
-  >★</h4>
+  }}>★</h4>
 }
 
 function RevertColor(props) {
-
   return <h4 className="headingItemOption" onClick={function (event) {
     props.revertColor();
-
-
-
-
-  }}
-  >◑</h4>
+  }}>◑</h4>
 }
 
+const getElementY = (element) => {
+  return window.pageYOffset + element.getBoundingClientRect().top - 70
+}
+
+function SearchInputBox(props) {
+  const [text, setText] = useState('');
+  //console.log("검색" + text);
+
+  let Num = -1;
+  if (document.getElementsByClassName('wordColor') != null) {
+    let elements = document.getElementsByClassName('wordColor');
+
+    for (var i = 0; i < elements.length; i++) {
+
+      //console.log('출력되나' + elements[i].innerHTML ); // "1-2", "2-2"
+      if (elements[i].innerHTML.toUpperCase().includes(text.toUpperCase())) {
+        Num = i;
+        break;
+      }
+
+    }
+    //console.log(Num);
+  }
+  if (-1 != Num) {
+    if (document.getElementById(Num) != null) {
+      window.scrollTo(0, getElementY(document.getElementById(Num)))
+    }
+    //document.getElementById(text).scrollIntoView({ behavior: 'smooth',block: "center"});
+  }
+  return <textarea placeholder="검색할 단어를 입력하세요" className="headingItemOption" onChange={(e) => {
+    setText(e.target.value);
+  }}></textarea >
+}
 
 function WordComponent(props) {
   return <div class="wordComponent">
     <div onClick={function (event) {
       event.preventDefault();
       props.onChangeMode();
-    }}
-      class="wordColor">{props.word}</div>
+    }} class="wordColor">{props.word}</div>
     <div class="bookmark">
       <div onClick={function (event) {
         props.onChangeBookMark();
-      }}> {props.bookMark}</div>
+      }}>{props.bookMark}</div>
       <div>　</div>
       <div>　</div>
     </div>
   </div>
 }
-
 
 function WordSpace(props) {
   const clearAll = async () => {
@@ -64,8 +87,6 @@ function WordSpace(props) {
   console.log("컴포넌트가 불림")
   const loadToDos = async () => {
     try {
-
-
       const s = await AsyncStorage.getItem(STORAGE_KEY)
       console.log("loadToDos ", s)
       //String to Object
@@ -76,17 +97,11 @@ function WordSpace(props) {
     }
   }
 
-
-
   let DisplayArr = [];
   //todolist obj
   useEffect(() => {
     console.log("use effect in WordSpace component")
     loadToDos();
-
-
-
-
   }, [])
   console.log(wordList)
 
@@ -106,7 +121,6 @@ function WordSpace(props) {
         else {
           DisplayArr = [true];
         }
-
       }
       else {
         if (DisplayArr != null) {
@@ -115,28 +129,21 @@ function WordSpace(props) {
         else {
           DisplayArr = [false];
         }
-
       }
-
     }
-
   })
 
   function WordFunction(props) {
     {/* 스타트를 ☆로 한다는 말인 것이지, 그 다음부터는 현재, 이후 의 의미만 의미 있음 */ }
-
-
-
     //async스토리지
     const saveToDos = async (toSave) => {
-      console.log("saveToDost", toSave);
+      console.log("saveToDos", toSave);
       await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(toSave)) //Object to String
     }
 
     console.log("wordFunction");
     const _bookmark = useState(props.bookMark);
     let bookmark = _bookmark[0];
-
     const setbookmark = _bookmark[1];
 
     const _mode = useState("word");
@@ -146,6 +153,7 @@ function WordSpace(props) {
     let word = props.word;
     let explain = props.explain;
     let wordindex = props.idx;
+    console.log("wordindex" + wordindex);
     let display = word;
     if (mode === "word") {
       display = word;
@@ -154,14 +162,10 @@ function WordSpace(props) {
       display = explain;
     }
 
-
-
     return (
-      <div>
-
+      <div id={wordindex}>
         {/* WordComponent 라는 함수인데 인자로 word 랑 function을 넘김 */}
         <WordComponent word={display} bookMark={bookmark} onChangeMode={function () {
-
           if (mode === "word") {
             setMode("explain")
           }
@@ -188,8 +192,7 @@ function WordSpace(props) {
           }
           else if (bookmark === "★") {
             setbookmark("☆")
-            let filtered
-              = wordList.filter((element) => element !== wordindex);
+            let filtered = wordList.filter((element) => element !== wordindex);
             saveToDos(wordList);
             setWordList(filtered);
             console.log(filtered);
@@ -197,10 +200,7 @@ function WordSpace(props) {
           }
         }}></WordComponent>
       </div>
-
-
     )
-
   }
   console.log("displayArr", DisplayArr);
   return <div>
@@ -208,7 +208,6 @@ function WordSpace(props) {
     {props.bookMarkPage === false ?
       wordList === null ?
         wordData.map((word, index) => (
-
           <WordFunction word={word.word} explain={word.explain} Abbreviation={word.Abbreviation} idx={word.idx} bookMark='☆'></WordFunction>
         ))
         :
@@ -228,20 +227,12 @@ function WordSpace(props) {
             :
             <a></a>
         ))
-
-
     }
   </div>
 }
 
-
 function App() {
-
-
-
   console.log("start App");
-
-
   const _bookmark = useState("★");
   const bookmarkCur = _bookmark[0];
   const bookmarkAfter = _bookmark[1];
@@ -277,7 +268,6 @@ function App() {
     HeadColor
   )
 
-
   document.documentElement.style.setProperty(
     '--word-background-color',
     wordbackColor
@@ -299,22 +289,24 @@ function App() {
       colorCode
     );
   }
-*/}
+  */}
 
   return (
-
-
     bookmarkCur === '★'
       ? <div>
         <div className="black-nav">
           <div>
-            <h4 className="name">의학 용어 단어</h4>
+            <h4 className="name">의학용어</h4>
           </div>
           <div className="Head_option">
             {/*
           <input value={colorCode} onChange={changeText}/>
          <button onClick={applyColor}>적용</button>
             */}
+
+            <SearchInputBox searchInput={function () {
+              console.log("검색박스")
+            }}></SearchInputBox>
             <RevertColor revertColor={function () {
               Setbgcolor(!bgcolor)
               console.log("헤드옵션불림")
@@ -326,34 +318,19 @@ function App() {
           </div>
         </div>
         <WordSpace bookMarkPage={false}></WordSpace>
-
-
       </div >
       : <div>
         <div className="black-nav2">
-
-
           <BackToHome backToHome={function () {
             bookmarkAfter('★')
           }} ></BackToHome>
           <h4 className="name2">북마크</h4>
-
-
         </div>
         {
           <WordSpace bookMarkPage={true}></WordSpace>
         }
-
-
-
       </div>
-
-
   )
 }
-
-
-
-
 
 export default App
