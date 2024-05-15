@@ -1,10 +1,107 @@
 
 import './App.css'
+import Naver from './naver';
 import { useState, useEffect } from 'react'
 import wordData from './Data'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import theme from "./theme";
+
+import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
+
 const STORAGE_KEY = "@toDos";
+
+
+function PrettyToast(props) {
+  const notify = () => toast.warning('로그인 필요!');
+
+  return (
+    <>
+
+      <ToastContainer
+        position="top-center"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
+    </>
+  );
+}
+
+function LoadBookMark(props) {
+  return <div className="headingItemOption" onClick={async (event) => {
+    event.preventDefault();
+    const url = new URL(window.location.href);
+    const urlParams = url.searchParams;
+    const email = urlParams.get('email')
+    const login = urlParams.get('login')
+    console.log(email);
+    console.log(login);
+    if (!email || !login) {
+      console.log('로그인필요');
+      toast.warning('로그인 필요!');
+    }
+    else {
+
+      fetch(`${process.env.REACT_APP_NAVER_REDIRECT_URL}/loadBookMark/${email}`)
+        .then((res) => res.json())
+        .then(async (data) => {
+
+
+          if (null != data[0].bookmark) {
+            await AsyncStorage.clear();
+            console.log("초기화완료")
+
+            const result = JSON.parse(data[0].bookmark);
+            console.log(result)
+
+            await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(result)) //Object to String
+
+            props.loadBookMark();
+          }
+          else {
+            toast.warning('저장된 북마크 기록이 없습니다.');
+          }
+        });
+
+
+
+    }
+  }}> 로드 </div>
+}
+
+function SaveBookMark(props) {
+  return <div className="headingItemOption" onClick={async (event) => {
+    event.preventDefault();
+    const url = new URL(window.location.href);
+    const urlParams = url.searchParams;
+    var email = urlParams.get('email')
+    var login = urlParams.get('login')
+    const s = await AsyncStorage.getItem(STORAGE_KEY);
+    console.log(email);
+    console.log(login);
+    if (!email || !login) {
+      console.log('로그인필요');
+      toast.warning('로그인 필요!');
+    }
+    else {
+      console.log(s);
+      fetch(`${process.env.REACT_APP_NAVER_REDIRECT_URL}/saveBookmark/inform?email=${email}&bookMarklist=${s}`)
+        .then((res) => res.text())
+        .then((data) => console.log(data));
+      props.saveBookMark();
+      toast.warning('저장 완료');
+    }
+
+  }}> 저장 </div>
+}
 
 function BackToHome(props) {
   return <h4 class="backButton" onClick={function (event) {
@@ -54,38 +151,50 @@ function SearchInputBox(props) {
     }
     //document.getElementById(text).scrollIntoView({ behavior: 'smooth',block: "center"});
   }
-  return <textarea placeholder="검색할 단어를 입력하세요" className="headingItemOption" onChange={(e) => {
+  return <textarea placeholder="검색할 단어를 입력하세요" className="headingItemOptionSearch" onChange={(e) => {
     setText(e.target.value);
-  }}></textarea >
+  }}></textarea>
 }
 
 function WordComponent(props) {
   return <div class="wordComponent">
+
     <div onClick={function (event) {
       event.preventDefault();
       props.onChangeMode();
     }} class="wordColor">{props.word}</div>
+
+
     <div class="bookmark">
       <div onClick={function (event) {
         props.onChangeBookMark();
       }}>{props.bookMark}</div>
       <div>　</div>
       <div>　</div>
+
     </div>
+
   </div>
+
+}
+
+function LoginInfo(props) {
+
+  const login = props.login;
+  const userid = props.email;
+
+  return login === 'true' ?
+    <div> id : {userid} </div>
+    :
+    <div> </div>
 }
 
 function WordSpace(props) {
-  const clearAll = async () => {
-    console.log("초기화완료")
-    await AsyncStorage.clear();
-    setWordList(null);
-  }
-  //todolist obj
+  // 3
   let [wordList, setWordList] = useState([]);
 
   console.log("컴포넌트가 불림")
-  const loadToDos = async () => {
+  const loadToDos = async () => { // 2
     try {
       const s = await AsyncStorage.getItem(STORAGE_KEY)
       console.log("loadToDos ", s)
@@ -99,11 +208,11 @@ function WordSpace(props) {
 
   let DisplayArr = [];
   //todolist obj
-  useEffect(() => {
+  useEffect(() => { // 1 ( 컴포넌트 호출 시, useEffect부터 수행 )
     console.log("use effect in WordSpace component")
     loadToDos();
   }, [])
-  console.log(wordList)
+  console.log('워드리스트' + wordList)
 
   wordData.map((word, index) => {
     let isExist = false;
@@ -141,7 +250,6 @@ function WordSpace(props) {
       await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(toSave)) //Object to String
     }
 
-    console.log("wordFunction");
     const _bookmark = useState(props.bookMark);
     let bookmark = _bookmark[0];
     const setbookmark = _bookmark[1];
@@ -153,7 +261,6 @@ function WordSpace(props) {
     let word = props.word;
     let explain = props.explain;
     let wordindex = props.idx;
-    console.log("wordindex" + wordindex);
     let display = word;
     if (mode === "word") {
       display = word;
@@ -163,7 +270,7 @@ function WordSpace(props) {
     }
 
     return (
-      <div id={wordindex}>
+      <div id={wordindex} className="wordBGImg">
         {/* WordComponent 라는 함수인데 인자로 word 랑 function을 넘김 */}
         <WordComponent word={display} bookMark={bookmark} onChangeMode={function () {
           if (mode === "word") {
@@ -202,8 +309,7 @@ function WordSpace(props) {
       </div>
     )
   }
-  console.log("displayArr", DisplayArr);
-  return <div>
+  return <div className="wordListCss">
     {/*<button onClick={clearAll}>초기화</button>*/}
     {props.bookMarkPage === false ?
       wordList === null ?
@@ -218,37 +324,45 @@ function WordSpace(props) {
             <WordFunction word={word.word} explain={word.explain} Abbreviation={word.Abbreviation} idx={word.idx} bookMark='☆'></WordFunction>
         ))
       :
-      wordList === null ?
-        <a></a>
-        :
-        wordData.map((word, index) => (
-          DisplayArr[word.idx] === true ?
-            <WordFunction word={word.word} explain={word.explain} Abbreviation={word.Abbreviation} idx={word.idx} bookMark='★'></WordFunction>
-            :
-            <a></a>
-        ))
+      wordData.map((word, index) => (
+        DisplayArr[word.idx] === true ?
+          <WordFunction word={word.word} explain={word.explain} Abbreviation={word.Abbreviation} idx={word.idx} bookMark='★'></WordFunction>
+          :
+          <a></a>
+      ))
     }
   </div>
+}
+const urlCheck = (location) => {
+
+  let getParameter = (key) => {
+    return new URLSearchParams(location.search).get(key);
+  };
+
+  const name = getParameter("name");
+  console.log('getParameter 함수: ', name);
 }
 
 function App() {
   console.log("start App");
-  const _bookmark = useState("★");
-  const bookmarkCur = _bookmark[0];
-  const bookmarkAfter = _bookmark[1];
+  const [bookmarkCur, bookmarkAfter] = useState("★");
+  const [bgcolor, Setbgcolor] = useState(true);
 
-  const _backgroundcolor = useState(true);
-  const bgcolor = _backgroundcolor[0];
-  const Setbgcolor = _backgroundcolor[1];
+  const urlParams = new URLSearchParams(window.location.search);
+  var email = urlParams.get('email')
+  var login = urlParams.get('login')
 
-  let BackgroundColor = 'rgb(218, 247, 247)';
-  let HeadColor = 'rgb(158,236,234)';
-  let wordbackColor = 'bisque'
+  console.log(email);
+  console.log(login);
+
+  let BackgroundColor = '#F7E3EE';
+  let HeadColor = '#F298C0';
+  let wordbackColor = '#D2C8E3'
   let wordColor = 'black'
   if (bgcolor == true) {
-    BackgroundColor = 'rgb(218, 247, 247)'
-    HeadColor = 'rgb(158,236,234)'
-    wordbackColor = 'bisque'
+    BackgroundColor = '#F7E3EE'
+    HeadColor = '#F298C0'
+    wordbackColor = '#D2C8E3'
     wordColor = 'black'
   }
   else {
@@ -296,14 +410,16 @@ function App() {
       ? <div>
         <div className="black-nav">
           <div>
-            <h4 className="name">의학용어</h4>
+
+            <img className="name" src="https://i.imgur.com/m7OUqx4.png" alt="My Image">
+            </img>
+            {/*</img><h4 className="name">의학용어</h4>*/}
           </div>
           <div className="Head_option">
             {/*
           <input value={colorCode} onChange={changeText}/>
          <button onClick={applyColor}>적용</button>
             */}
-
             <SearchInputBox searchInput={function () {
               console.log("검색박스")
             }}></SearchInputBox>
@@ -320,12 +436,34 @@ function App() {
         <WordSpace bookMarkPage={false}></WordSpace>
       </div >
       : <div>
-        <div className="black-nav2">
-          <BackToHome backToHome={function () {
-            bookmarkAfter('★')
-          }} ></BackToHome>
-          <h4 className="name2">북마크</h4>
+        <div className="black-nav">
+          <div className="Head_option2">
+            <BackToHome backToHome={function () {
+              bookmarkAfter('★')
+            }}></BackToHome>
+            <h4>북마크</h4>
+          </div>
+          <div className="Head_option3" >
+            <div>
+
+              <LoginInfo email={email} login={login}></LoginInfo>
+
+            </div>
+            <div className="Head_option2">
+              <Naver email={email} login={login} />
+
+              <SaveBookMark saveBookMark={function () {
+                // window.location.replace("");
+              }}></SaveBookMark>
+              <PrettyToast></PrettyToast>
+              <LoadBookMark loadBookMark={function () {
+                window.location.replace("");
+              }}></LoadBookMark>
+            </div>
+          </div>
         </div>
+
+
         {
           <WordSpace bookMarkPage={true}></WordSpace>
         }

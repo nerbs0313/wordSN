@@ -60,26 +60,40 @@ html {
   flex-direction:row;
   padding-top : 20px;
 }
+
+.Head_option2{
+  font-size:20px;
+  font-weight: bold;
+  display : flex;
+  flex-direction:row;
+  padding-top : 10px;
+}
+
 .headingItemOption{
   margin-left : 20px;
-  
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-
+.headingItemOptionSearch{
+  background-color: #F6F2D9;
+  margin-left : 20px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .backButton
 {
   font-size: 50px;
-  padding-top:13px;
+  margin-bottom: 0px;
+  margin-top : 0px;
   margin-left:-20px;
 }
 
 
 .name{
-  font-size: 30px;
-  padding-top : 20px;
-  padding-left: 10px;
+  width:115px; 
+  height:auto;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -93,17 +107,12 @@ html {
 
 .wordColor{  
   font-size: 25px;
-  margin-top: 25px;
+  margin-top: 10px;
   margin-left :25px;
   width:100%;
   height: 90px;
-  color:var(--word-color);           
-  background-color:var(--word-background-color);;   
-  align-items: center;  
-  border-top: dashed 1px black;
-  border-bottom: dashed 1px black;
   
-  border-left: dashed 1px black;
+  align-items: center;  
   
   text-align : center;  
   line-height : 90px;
@@ -111,18 +120,20 @@ html {
 
 .bookmark{
   margin-top: 25px;
-  margin-right :25px;
+  margin-right : calc( 100% / 14 );
   font-size: 20px;
   color:white;
   display : flex;
   flex-direction:column;
   justify-content: space-between;
   
-  background-color:var(--word-background-color);; 
-  border-top: dashed 1px black;
-  border-bottom: dashed 1px black;
-  border-right: dashed 1px black;
 }
+
+.wordListCss{
+  display : flex;
+  flex-direction:column;
+}
+
 
 body {
   padding-top: 60px;
@@ -130,11 +141,22 @@ body {
   /* 생략 */
 }
 
+.searchIcon{
+  width:calc(100% / 5);
+  height: calc( 100% / 5 );
+}
+
 
 .wordComponent{
-  
   display : flex;
   flex-direction:row;
+}
+
+.wordBGImg
+{
+  background-image: url('https://i.imgur.com/ZRT20vs.png');
+  background-size: 100% 100%;
+  
 }
 
 textarea { 

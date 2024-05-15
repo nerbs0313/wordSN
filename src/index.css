@@ -6,6 +6,7 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-size: 20px;
+  position: relative;
 }
 
 ol,
@@ -145,6 +146,11 @@ button {
   width: 400px;
   height: 40px;
   font-size: 20px;
+}
+
+.Green1{
+  position: absolute;
+  margin-right: 100px;
 }
 
 .App{
