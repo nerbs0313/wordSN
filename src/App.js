@@ -364,14 +364,15 @@ function App() {
   if (bgcolor == true) {
     BackgroundColor = '#F7E3EE'
     HeadColor = '#F298C0'
-    wordbackColor = '#D2C8E3'
+    wordbackColor = `url('https://i.imgur.com/ZRT20vs.png')`
     wordColor = 'black'
   }
   else {
     BackgroundColor = 'black'
     HeadColor = '#1C1C1C'
-    wordbackColor = '#1C1C1C'
+    wordbackColor = `url('https://i.imgur.com/KjAaaFN.png')`
     wordColor = 'white'
+
   }
 
   document.documentElement.style.setProperty(
@@ -393,6 +394,12 @@ function App() {
     '--word-color',
     wordColor
   )
+
+  document.documentElement.style.setProperty(
+    '--white-word-BG',
+    `url('https://i.imgur.com/ZRT20vs.png')`
+  )
+
 
   {/*
   const changeText = (e) => {
