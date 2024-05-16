@@ -2,6 +2,11 @@ html {
   --background-color: white;
 }
 
+:root {
+  --main-name-width: calc(100vw / 3);
+  --main-nav-height: calc(100vh * 0.11);
+}
+
 .Box {
   color: black;                  
   background-color:var(--word-background-color);   
@@ -23,9 +28,9 @@ html {
   left: 0;
   right: 0;
   
-  margin-bottom:1000px;
-  height: 40px;
-  padding: 1rem;
+  height: var(--main-nav-height);
+  padding-left: 4%;
+  padding-right : 4%;
   color: white;
   background: var(--head-background-color);
   font-weight: bold;
@@ -59,6 +64,7 @@ html {
   display : flex;
   flex-direction:row;
   padding-top : 20px;
+  
 }
 
 .Head_option2{
@@ -68,16 +74,24 @@ html {
   flex-direction:row;
   padding-top : 10px;
 }
-
-.headingItemOption{
-  margin-left : 20px;
+.headingItemOption2{
+  width: 40px;
+  height:auto;
+  margin-left : 15px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  align-items: center;
+}
+.headingItemOption{
+  margin-left : 15px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  align-items: center;
 }
 .headingItemOptionSearch{
   background-color: #F6F2D9;
-  margin-left : 20px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -92,8 +106,8 @@ html {
 
 
 .name{
-  width:115px; 
-  height:auto;
+  height:calc(100vh * 0.085);
+  width: auto  ;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -132,11 +146,11 @@ html {
 .wordListCss{
   display : flex;
   flex-direction:column;
+  padding-top : var(--main-nav-height);
 }
 
 
 body {
-  padding-top: 60px;
   background-color: var(--background-color);
   /* 생략 */
 }
@@ -156,7 +170,6 @@ body {
 {
   background-image: url('https://i.imgur.com/ZRT20vs.png');
   background-size: 100% 100%;
-  
 }
 
 textarea { 

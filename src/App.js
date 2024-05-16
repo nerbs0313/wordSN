@@ -4,6 +4,8 @@ import Naver from './naver';
 import { useState, useEffect } from 'react'
 import wordData from './Data'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
+
 import theme from "./theme";
 
 import 'react-toastify/dist/ReactToastify.css';
@@ -36,7 +38,7 @@ function PrettyToast(props) {
 }
 
 function LoadBookMark(props) {
-  return <div className="headingItemOption" onClick={async (event) => {
+  return <img className="headingItemOption2" src={`${process.env.PUBLIC_URL}/images/load.png`} alt="load" onClick={async (event) => {
     event.preventDefault();
     const url = new URL(window.location.href);
     const urlParams = url.searchParams;
@@ -74,11 +76,11 @@ function LoadBookMark(props) {
 
 
     }
-  }}> 로드 </div>
+  }}></img>
 }
 
 function SaveBookMark(props) {
-  return <div className="headingItemOption" onClick={async (event) => {
+  return <img className="headingItemOption2" src={`${process.env.PUBLIC_URL}/images/save.png`} alt="save" onClick={async (event) => {
     event.preventDefault();
     const url = new URL(window.location.href);
     const urlParams = url.searchParams;
@@ -100,7 +102,7 @@ function SaveBookMark(props) {
       toast.warning('저장 완료');
     }
 
-  }}> 저장 </div>
+  }}></img>
 }
 
 function BackToHome(props) {
@@ -411,7 +413,7 @@ function App() {
         <div className="black-nav">
           <div>
 
-            <img className="name" src="https://i.imgur.com/m7OUqx4.png" alt="My Image">
+            <img className="name" src={`${process.env.PUBLIC_URL}/images/namm.png`} alt="My Image">
             </img>
             {/*</img><h4 className="name">의학용어</h4>*/}
           </div>
