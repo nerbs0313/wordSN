@@ -4,7 +4,7 @@ html {
 
 :root {
   --main-name-width: calc(100vw / 3);
-  --main-nav-height: calc(100vh * 0.11);
+  --main-nav-height: calc(100vh * 0.12);
 }
 
 .black-nav{
@@ -59,6 +59,8 @@ html {
   display : flex;
   flex-direction:row;
   padding-top : 10px;
+  float: right;
+
 }
 .headingItemOption2{
   width: 40px;
@@ -164,4 +166,20 @@ textarea {
 	height:20px; 
   resize: none;
 
+}
+
+.open-modal-button {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
 }

@@ -4,7 +4,7 @@ import Naver from './naver';
 import { useState, useEffect } from 'react'
 import wordData from './Data'
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import Modal from './Modal';
 
 import theme from "./theme";
 
@@ -38,45 +38,26 @@ function PrettyToast(props) {
 }
 
 function LoadBookMark(props) {
-  return <img className="headingItemOption2" src={`${process.env.PUBLIC_URL}/images/load.png`} alt="load" onClick={async (event) => {
-    event.preventDefault();
-    const url = new URL(window.location.href);
-    const urlParams = url.searchParams;
-    const email = urlParams.get('email')
-    const login = urlParams.get('login')
-    console.log(email);
-    console.log(login);
-    if (!email || !login) {
-      console.log('로그인필요');
-      toast.warning('로그인 필요!');
-    }
-    else {
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-      fetch(`${process.env.REACT_APP_NAVER_REDIRECT_URL}/loadBookMark/${email}`)
-        .then((res) => res.json())
-        .then(async (data) => {
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
 
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
-          if (null != data[0].bookmark) {
-            await AsyncStorage.clear();
-            console.log("초기화완료")
+  return <div>
+    <img className="headingItemOption2" src={`${process.env.PUBLIC_URL}/images/setting.png`} alt="load" onClick={
+      openModal
 
-            const result = JSON.parse(data[0].bookmark);
-            console.log(result)
+    }>
+    </img>
+    {isModalOpen && <div className="backdrop" onClick={closeModal} />}
+    {isModalOpen && <Modal closeModal={closeModal} />}
 
-            await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(result)) //Object to String
-
-            props.loadBookMark();
-          }
-          else {
-            toast.warning('저장된 북마크 기록이 없습니다.');
-          }
-        });
-
-
-
-    }
-  }}></img>
+  </div>
 }
 
 function SaveBookMark(props) {
@@ -186,7 +167,7 @@ function LoginInfo(props) {
   const userid = props.email;
 
   return login === 'true' ?
-    <div> id : {userid} </div>
+    <div> {userid} </div>
     :
     <div> </div>
 }
@@ -459,11 +440,6 @@ function App() {
 
             </div>
             <div className="Head_option2">
-              <Naver email={email} login={login} />
-
-              <SaveBookMark saveBookMark={function () {
-                // window.location.replace("");
-              }}></SaveBookMark>
               <PrettyToast></PrettyToast>
               <LoadBookMark loadBookMark={function () {
                 window.location.replace("");
