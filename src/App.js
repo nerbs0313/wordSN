@@ -1,12 +1,9 @@
-
-import './App.css'
+import './App.css';
 import Naver from './naver';
-import { useState, useEffect } from 'react'
-import wordData from './Data'
+import { useState, useEffect } from 'react';
+import wordData from './Data';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Modal from './Modal';
-
-import theme from "./theme";
 
 import 'react-toastify/dist/ReactToastify.css';
 import { toast } from 'react-toastify';
@@ -14,13 +11,11 @@ import { ToastContainer } from 'react-toastify';
 
 const STORAGE_KEY = "@toDos";
 
-
 function PrettyToast(props) {
   const notify = () => toast.warning('로그인 필요!');
 
   return (
     <>
-
       <ToastContainer
         position="top-center"
         autoClose={2000}
@@ -48,190 +43,159 @@ function LoadBookMark(props) {
     setIsModalOpen(false);
   };
 
-  return <div>
-    <img className="headingItemOption2" src={`${process.env.PUBLIC_URL}/images/setting.png`} alt="load" onClick={
-      openModal
-
-    }>
-    </img>
-    {isModalOpen && <div className="backdrop" onClick={closeModal} />}
-    {isModalOpen && <Modal closeModal={closeModal} />}
-
-  </div>
+  return (
+    <div>
+      <img className="headingItemOption2" src={`${process.env.PUBLIC_URL}/images/setting.png`} alt="load" onClick={openModal} />
+      {isModalOpen && <div className="backdrop" onClick={closeModal} />}
+      {isModalOpen && <Modal closeModal={closeModal} />}
+    </div>
+  );
 }
 
 function SaveBookMark(props) {
-  return <img className="headingItemOption2" src={`${process.env.PUBLIC_URL}/images/save.png`} alt="save" onClick={async (event) => {
-    event.preventDefault();
-    const url = new URL(window.location.href);
-    const urlParams = url.searchParams;
-    var email = urlParams.get('email')
-    var login = urlParams.get('login')
-    const s = await AsyncStorage.getItem(STORAGE_KEY);
-    console.log(email);
-    console.log(login);
-    if (!email || !login) {
-      console.log('로그인필요');
-      toast.warning('로그인 필요!');
-    }
-    else {
-      console.log(s);
-      fetch(`${process.env.REACT_APP_NAVER_REDIRECT_URL}/saveBookmark/inform?email=${email}&bookMarklist=${s}`)
-        .then((res) => res.text())
-        .then((data) => console.log(data));
-      props.saveBookMark();
-      toast.warning('저장 완료');
-    }
-
-  }}></img>
+  return (
+    <img className="headingItemOption2" src={`${process.env.PUBLIC_URL}/images/save.png`} alt="save" onClick={async (event) => {
+      event.preventDefault();
+      const url = new URL(window.location.href);
+      const urlParams = url.searchParams;
+      var email = urlParams.get('email');
+      var login = urlParams.get('login');
+      const s = await AsyncStorage.getItem(STORAGE_KEY);
+      if (!email || !login) {
+        toast.warning('로그인 필요!');
+      } else {
+        fetch(`${process.env.REACT_APP_NAVER_REDIRECT_URL}/saveBookmark/inform?email=${email}&bookMarklist=${s}`)
+          .then((res) => res.text())
+          .then((data) => console.log(data));
+        props.saveBookMark();
+        toast.warning('저장 완료');
+      }
+    }} />
+  );
 }
 
 function BackToHome(props) {
-  return <h4 class="backButton" onClick={function (event) {
+  return <h4 className="backButton" onClick={(event) => {
     event.preventDefault();
     props.backToHome();
   }}> ＜ </h4>
 }
 
 function OpenBookMark(props) {
-  return <h4 className="headingItemOption" onClick={function (event) {
-    props.openBookMark();
-  }}>★</h4>
+  return <h4 className="headingItemOption" onClick={props.openBookMark}>★</h4>
 }
 
 function RevertColor(props) {
-  return <h4 className="headingItemOption" onClick={function (event) {
-    props.revertColor();
-  }}>◑</h4>
+  return <h4 className="headingItemOption" onClick={props.revertColor}>◑</h4>
 }
 
 const getElementY = (element) => {
-  return window.pageYOffset + element.getBoundingClientRect().top - 70
+  return window.pageYOffset + element.getBoundingClientRect().top - 70;
 }
 
 function SearchInputBox(props) {
   const [text, setText] = useState('');
-  //console.log("검색" + text);
-
   let Num = -1;
   if (document.getElementsByClassName('wordColor') != null) {
     let elements = document.getElementsByClassName('wordColor');
-
     for (var i = 0; i < elements.length; i++) {
-
-      //console.log('출력되나' + elements[i].innerHTML ); // "1-2", "2-2"
       if (elements[i].innerHTML.toUpperCase().includes(text.toUpperCase())) {
         Num = i;
         break;
       }
-
     }
-    //console.log(Num);
   }
   if (-1 != Num) {
     if (document.getElementById(Num) != null) {
       window.scrollTo(0, getElementY(document.getElementById(Num)))
     }
-    //document.getElementById(text).scrollIntoView({ behavior: 'smooth',block: "center"});
   }
-  return <textarea placeholder="검색할 단어를 입력하세요" className="headingItemOptionSearch" onChange={(e) => {
-    setText(e.target.value);
-  }}></textarea>
+  return (
+    <textarea placeholder="검색할 단어를 입력하세요" className="headingItemOptionSearch" onChange={(e) => {
+      setText(e.target.value);
+    }}></textarea>
+  );
 }
 
 function WordComponent(props) {
-  return <div class="wordComponent">
-
-    <div onClick={function (event) {
-      event.preventDefault();
-      props.onChangeMode();
-    }} class="wordColor">{props.word}</div>
-
-
-    <div class="bookmark">
-      <div onClick={function (event) {
-        props.onChangeBookMark();
-      }}>{props.bookMark}</div>
-      <div>　</div>
-      <div>　</div>
-
+  return (
+    <div className="wordComponent">
+      <div onClick={(event) => {
+        event.preventDefault();
+        props.onChangeMode();
+      }} className="wordColor">{props.word}</div>
+      <div className="bookmark">
+        <div onClick={props.onChangeBookMark}>{props.bookMark}</div>
+        <div>　</div>
+        <div>　</div>
+      </div>
     </div>
-
-  </div>
-
+  );
 }
 
 function LoginInfo(props) {
-
   const login = props.login;
   const userid = props.email;
-
-  return login === 'true' ?
-    <div> {userid} </div>
-    :
-    <div> </div>
+  return login === 'true' ? <div> {userid} </div> : <div> </div>;
 }
 
 function WordSpace(props) {
-  // 3
   let [wordList, setWordList] = useState([]);
+  let [quizQuestion, setQuizQuestion] = useState(null);
+  let [quizOptions, setQuizOptions] = useState([]);
+  let [quizAnswer, setQuizAnswer] = useState(null);
+  const [DisplayArr, setDisplayArr] = useState({});
 
-  console.log("컴포넌트가 불림")
-  const loadToDos = async () => { // 2
+  console.log("컴포넌트가 불림");
+  const loadToDos = async () => {
     try {
-      const s = await AsyncStorage.getItem(STORAGE_KEY)
-      console.log("loadToDos ", s)
-      //String to Object
-      console.log("loadToDos ", JSON.parse(s))
-      setWordList(JSON.parse(s))
+      const s = await AsyncStorage.getItem(STORAGE_KEY);
+      console.log("loadToDos ", s);
+      const savedWordList = JSON.parse(s);
+      setWordList(savedWordList);
+
+      const displayArr = {};
+      if (savedWordList) {
+        savedWordList.forEach((idx) => {
+          displayArr[idx] = true;
+        });
+      }
+      setDisplayArr(displayArr);
     } catch (e) {
-      console.log(e)
+      console.log(e);
     }
-  }
+  };
 
-  let DisplayArr = [];
-  //todolist obj
-  useEffect(() => { // 1 ( 컴포넌트 호출 시, useEffect부터 수행 )
-    console.log("use effect in WordSpace component")
+  useEffect(() => {
+    console.log("use effect in WordSpace component");
     loadToDos();
-  }, [])
-  console.log('워드리스트' + wordList)
+  }, []);
 
-  wordData.map((word, index) => {
-    let isExist = false;
-    if (wordList != null) {
-      wordList.map((wordListValue, index) => {
-        if (word.idx == wordListValue) {
-          isExist = true;
-        }
-      })
-
-      if (isExist == true) {
-        if (DisplayArr != null) {
-          DisplayArr = [...DisplayArr, true];
-        }
-        else {
-          DisplayArr = [true];
+  const generateQuiz = () => {
+    const bookmarkedWords = wordData.filter(word => wordList.includes(word.idx));
+    if (bookmarkedWords.length > 0) {
+      const questionWord = bookmarkedWords[Math.floor(Math.random() * bookmarkedWords.length)];
+      const options = [questionWord.explain];
+      while (options.length < 4) {
+        const option = wordData[Math.floor(Math.random() * wordData.length)].explain;
+        if (!options.includes(option)) {
+          options.push(option);
         }
       }
-      else {
-        if (DisplayArr != null) {
-          DisplayArr = [...DisplayArr, false];
-        }
-        else {
-          DisplayArr = [false];
-        }
-      }
+      setQuizQuestion(questionWord.word);
+      setQuizOptions(shuffleArray(options));
+      setQuizAnswer(questionWord.explain);
     }
-  })
+  };
+
+  const shuffleArray = (array) => {
+    return array.sort(() => Math.random() - 0.5);
+  };
 
   function WordFunction(props) {
-    {/* 스타트를 ☆로 한다는 말인 것이지, 그 다음부터는 현재, 이후 의 의미만 의미 있음 */ }
-    //async스토리지
     const saveToDos = async (toSave) => {
-      console.log("saveToDos", toSave);
-      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(toSave)) //Object to String
-    }
+      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(toSave));
+    };
 
     const _bookmark = useState(props.bookMark);
     let bookmark = _bookmark[0];
@@ -254,74 +218,108 @@ function WordSpace(props) {
 
     return (
       <div id={wordindex} className="wordBGImg">
-        {/* WordComponent 라는 함수인데 인자로 word 랑 function을 넘김 */}
-        <WordComponent word={display} bookMark={bookmark} onChangeMode={function () {
+        <WordComponent word={display} bookMark={bookmark} onChangeMode={() => {
           if (mode === "word") {
-            setMode("explain")
+            setMode("explain");
+          } else if (mode === "explain") {
+            setMode("word");
           }
-          else if (mode === "explain") {
-            setMode("word")
-          }
-        }} onChangeBookMark={function () {
+        }} onChangeBookMark={() => {
           if (bookmark === "☆") {
-            setbookmark("★")
+            setbookmark("★");
             AsyncStorage.setItem(wordindex, "true");
-            console.log("인덱스 추가완료 ", wordindex)
-
             if (wordList != null) {
               wordList = [...wordList, wordindex];
-            }
-            else {
+            } else {
               wordList = [wordindex];
             }
-            console.log("인덱스 추가완료 ", wordindex)
-
-            console.log(wordList);
             saveToDos(wordList);
             setWordList(wordList);
-          }
-          else if (bookmark === "★") {
-            setbookmark("☆")
+            setDisplayArr({ ...DisplayArr, [wordindex]: true });
+          } else if (bookmark === "★") {
+            setbookmark("☆");
             let filtered = wordList.filter((element) => element !== wordindex);
-            saveToDos(wordList);
+            saveToDos(filtered);
             setWordList(filtered);
-            console.log(filtered);
-            console.log("인덱스 제거완료 ", wordindex)
+            setDisplayArr({ ...DisplayArr, [wordindex]: false });
           }
         }}></WordComponent>
       </div>
     )
   }
-  return <div className="wordListCss">
-    {/*<button onClick={clearAll}>초기화</button>*/}
-    {props.bookMarkPage === false ?
-      wordList === null ?
-        wordData.map((word, index) => (
-          <WordFunction word={word.word} explain={word.explain} Abbreviation={word.Abbreviation} idx={word.idx} bookMark='☆'></WordFunction>
-        ))
-        :
-        wordData.map((word, index) => (
-          DisplayArr[word.idx] === true ?
-            <WordFunction word={word.word} explain={word.explain} Abbreviation={word.Abbreviation} idx={word.idx} bookMark='★'></WordFunction>
-            :
-            <WordFunction word={word.word} explain={word.explain} Abbreviation={word.Abbreviation} idx={word.idx} bookMark='☆'></WordFunction>
-        ))
-      :
-      wordData.map((word, index) => (
-        DisplayArr[word.idx] === true ?
-          <WordFunction word={word.word} explain={word.explain} Abbreviation={word.Abbreviation} idx={word.idx} bookMark='★'></WordFunction>
-          :
-          <a></a>
-      ))
-    }
-  </div>
-}
-const urlCheck = (location) => {
 
+  const handleQuizAnswer = (option) => {
+    if (option === quizAnswer) {
+      toast.success('정답입니다!', {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    } else {
+      toast.warning('오답입니다!', {
+        position: "top-center",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    }
+  };
+
+  return (
+    <div className="wordListCss">
+
+      {props.bookMarkPage && (
+        <>
+          <button onClick={generateQuiz}>퀴즈 생성</button>
+          {quizQuestion && (
+            <div className="quiz">
+              <h4>{quizQuestion}</h4>
+              <ul>
+                {quizOptions.map((option, index) => (
+                  <li key={index} onClick={() => handleQuizAnswer(option)}>{option}</li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </>
+      )}
+      {props.bookMarkPage === false ?
+        wordList === null ?
+          wordData.map((word, index) => (
+            <WordFunction key={index} word={word.word} explain={word.explain} Abbreviation={word.Abbreviation} idx={word.idx} bookMark='☆'></WordFunction>
+          ))
+          :
+          wordData.map((word, index) => (
+            DisplayArr[word.idx] === true ?
+              <WordFunction key={index} word={word.word} explain={word.explain} Abbreviation={word.Abbreviation} idx={word.idx} bookMark='★'></WordFunction>
+              :
+              <WordFunction key={index} word={word.word} explain={word.explain} Abbreviation={word.Abbreviation} idx={word.idx} bookMark='☆'></WordFunction>
+          ))
+        :
+
+        wordList.map((idx, index) => (
+          wordData[idx] ?
+            <WordFunction key={index} word={wordData[idx].word} explain={wordData[idx].explain} Abbreviation={wordData[idx].Abbreviation} idx={wordData[idx].idx} bookMark='★'></WordFunction>
+            :
+            <a key={index}></a>
+        ))
+      }
+
+    </div>
+  );
+}
+
+const urlCheck = (location) => {
   let getParameter = (key) => {
     return new URLSearchParams(location.search).get(key);
   };
-
   const name = getParameter("name");
   console.log('getParameter 함수: ', name);
 }
@@ -332,128 +330,83 @@ function App() {
   const [bgcolor, Setbgcolor] = useState(true);
 
   const urlParams = new URLSearchParams(window.location.search);
-  var email = urlParams.get('email')
-  var login = urlParams.get('login')
-
-  console.log(email);
-  console.log(login);
+  var email = urlParams.get('email');
+  var login = urlParams.get('login');
 
   let BackgroundColor = '#F7E3EE';
   let HeadColor = '#F298C0';
-  let wordbackColor = '#D2C8E3'
-  let wordColor = 'black'
-  if (bgcolor == true) {
-    BackgroundColor = '#F7E3EE'
-    HeadColor = '#F298C0'
-    wordbackColor = `url('https://i.imgur.com/ZRT20vs.png')`
-    wordColor = 'black'
-  }
-  else {
-    BackgroundColor = 'black'
-    HeadColor = '#1C1C1C'
-    wordbackColor = `url('https://i.imgur.com/KjAaaFN.png')`
-    wordColor = 'white'
-
+  let wordbackColor = '#D2C8E3';
+  let wordColor = 'black';
+  if (bgcolor === true) {
+    BackgroundColor = '#F7E3EE';
+    HeadColor = '#F298C0';
+    wordbackColor = `url('https://i.imgur.com/ZRT20vs.png')`;
+    wordColor = 'black';
+  } else {
+    BackgroundColor = 'black';
+    HeadColor = '#1C1C1C';
+    wordbackColor = `url('https://i.imgur.com/KjAaaFN.png')`;
+    wordColor = 'white';
   }
 
   document.documentElement.style.setProperty(
-    '--background-color',
-    BackgroundColor
-  )
-
+    '--background-color', BackgroundColor
+  );
   document.documentElement.style.setProperty(
-    '--head-background-color',
-    HeadColor
-  )
-
+    '--head-background-color', HeadColor
+  );
   document.documentElement.style.setProperty(
-    '--word-background-color',
-    wordbackColor
-  )
-
+    '--word-background-color', wordbackColor
+  );
   document.documentElement.style.setProperty(
-    '--word-color',
-    wordColor
-  )
-
+    '--word-color', wordColor
+  );
   document.documentElement.style.setProperty(
-    '--white-word-BG',
-    `url('https://i.imgur.com/ZRT20vs.png')`
-  )
-
-
-  {/*
-  const changeText = (e) => {
-    setColorCode(e.target.value);
-  }
-
-  const applyColor = () => {
-    document.documentElement.style.setProperty(
-      '--background-color',
-      colorCode
-    );
-  }
-  */}
+    '--white-word-BG', `url('https://i.imgur.com/ZRT20vs.png')`
+  );
 
   return (
     bookmarkCur === '★'
       ? <div>
         <div className="black-nav">
           <div>
-
-            <img className="name" src={`${process.env.PUBLIC_URL}/images/namm.png`} alt="My Image">
-            </img>
-            {/*</img><h4 className="name">의학용어</h4>*/}
+            <img className="name" src={`${process.env.PUBLIC_URL}/images/namm.png`} alt="My Image" />
           </div>
           <div className="Head_option">
-            {/*
-          <input value={colorCode} onChange={changeText}/>
-         <button onClick={applyColor}>적용</button>
-            */}
-            <SearchInputBox searchInput={function () {
-              console.log("검색박스")
-            }}></SearchInputBox>
-            <RevertColor revertColor={function () {
-              Setbgcolor(!bgcolor)
-              console.log("헤드옵션불림")
-
-            }}></RevertColor>
-            <OpenBookMark openBookMark={function () {
-              bookmarkAfter('☆')
-            }}></OpenBookMark>
+            <SearchInputBox searchInput={() => { }} />
+            <RevertColor revertColor={() => {
+              Setbgcolor(!bgcolor);
+            }} />
+            <OpenBookMark openBookMark={() => {
+              bookmarkAfter('☆');
+            }} />
           </div>
         </div>
-        <WordSpace bookMarkPage={false}></WordSpace>
-      </div >
+        <WordSpace bookMarkPage={false} />
+      </div>
       : <div>
         <div className="black-nav">
           <div className="Head_option2">
-            <BackToHome backToHome={function () {
-              bookmarkAfter('★')
-            }}></BackToHome>
+            <BackToHome backToHome={() => {
+              bookmarkAfter('★');
+            }} />
             <h4>북마크</h4>
           </div>
-          <div className="Head_option3" >
+          <div className="Head_option3">
             <div>
-
-              <LoginInfo email={email} login={login}></LoginInfo>
-
+              <LoginInfo email={email} login={login} />
             </div>
             <div className="Head_option2">
-              <PrettyToast></PrettyToast>
-              <LoadBookMark loadBookMark={function () {
+              <PrettyToast />
+              <LoadBookMark loadBookMark={() => {
                 window.location.replace("");
-              }}></LoadBookMark>
+              }} />
             </div>
           </div>
         </div>
-
-
-        {
-          <WordSpace bookMarkPage={true}></WordSpace>
-        }
+        <WordSpace bookMarkPage={true} />
       </div>
-  )
+  );
 }
 
-export default App
+export default App;
