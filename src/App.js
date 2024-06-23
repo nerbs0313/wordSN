@@ -274,21 +274,22 @@ function WordSpace(props) {
 
   return (
     <div className="wordListCss">
-
       {props.bookMarkPage && (
-        <>
+        <div className="quizContainer">
           <button onClick={generateQuiz}>퀴즈 생성</button>
           {quizQuestion && (
             <div className="quiz">
-              <h4>{quizQuestion}</h4>
-              <ul>
+              <h4 className={props.bgcolor ? "quizQuestion dark" : "quizQuestion light"}>{quizQuestion}</h4>
+              <ul className="quizOptions">
                 {quizOptions.map((option, index) => (
-                  <li key={index} onClick={() => handleQuizAnswer(option)}>{option}</li>
+                  <li key={index} className="quizOption" onClick={() => handleQuizAnswer(option)}>
+                    {index + 1}. {option}
+                  </li>
                 ))}
               </ul>
             </div>
           )}
-        </>
+        </div>
       )}
       {props.bookMarkPage === false ?
         wordList === null ?
@@ -315,6 +316,51 @@ function WordSpace(props) {
     </div>
   );
 }
+
+// CSS Styles
+const styles = `
+  .quizContainer {  
+    padding: 10px;
+    border-bottom: 2px solid #ccc;
+  }
+
+  .quiz {
+    margin-top: 10px;
+  }
+
+  .quizQuestion.light {
+    color: var(--word-color);
+  }
+
+  .quizQuestion.dark {
+    color: var(--word-color);
+  }
+
+  .quizOptions {
+    list-style-type: none;
+    padding: 0;
+  }
+
+  .quizOption {
+    padding: 8px 12px;
+    margin: 5px 0;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+    color: var(--word-color); 
+  }
+
+  .quizOption:hover {
+    background-color: #f0f0f0;
+  }
+`;
+
+// Add styles to the document
+const styleSheet = document.createElement("style");
+styleSheet.type = "text/css";
+styleSheet.innerText = styles;
+document.head.appendChild(styleSheet);
 
 const urlCheck = (location) => {
   let getParameter = (key) => {
