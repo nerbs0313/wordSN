@@ -172,19 +172,21 @@ function WordSpace(props) {
   }, []);
 
   const generateQuiz = () => {
-    const bookmarkedWords = wordData.filter(word => wordList.includes(word.idx));
-    if (bookmarkedWords.length > 0) {
-      const questionWord = bookmarkedWords[Math.floor(Math.random() * bookmarkedWords.length)];
-      const options = [questionWord.explain];
-      while (options.length < 4) {
-        const option = wordData[Math.floor(Math.random() * wordData.length)].explain;
-        if (!options.includes(option)) {
-          options.push(option);
+    if (wordList != null) {
+      const bookmarkedWords = wordData.filter(word => wordList.includes(word.idx));
+      if (bookmarkedWords.length > 0) {
+        const questionWord = bookmarkedWords[Math.floor(Math.random() * bookmarkedWords.length)];
+        const options = [questionWord.explain];
+        while (options.length < 4) {
+          const option = wordData[Math.floor(Math.random() * wordData.length)].explain;
+          if (!options.includes(option)) {
+            options.push(option);
+          }
         }
+        setQuizQuestion(questionWord.word);
+        setQuizOptions(shuffleArray(options));
+        setQuizAnswer(questionWord.explain);
       }
-      setQuizQuestion(questionWord.word);
-      setQuizOptions(shuffleArray(options));
-      setQuizAnswer(questionWord.explain);
     }
   };
 
@@ -294,22 +296,21 @@ function WordSpace(props) {
       {props.bookMarkPage === false ?
         wordList === null ?
           wordData.map((word, index) => (
-            <WordFunction key={index} word={word.word} explain={word.explain} Abbreviation={word.Abbreviation} idx={word.idx} bookMark='☆'></WordFunction>
+            <WordFunction word={word.word} explain={word.explain} Abbreviation={word.Abbreviation} idx={word.idx} bookMark='☆'></WordFunction>
           ))
           :
           wordData.map((word, index) => (
             DisplayArr[word.idx] === true ?
-              <WordFunction key={index} word={word.word} explain={word.explain} Abbreviation={word.Abbreviation} idx={word.idx} bookMark='★'></WordFunction>
+              <WordFunction word={word.word} explain={word.explain} Abbreviation={word.Abbreviation} idx={word.idx} bookMark='★'></WordFunction>
               :
-              <WordFunction key={index} word={word.word} explain={word.explain} Abbreviation={word.Abbreviation} idx={word.idx} bookMark='☆'></WordFunction>
+              <WordFunction word={word.word} explain={word.explain} Abbreviation={word.Abbreviation} idx={word.idx} bookMark='☆'></WordFunction>
           ))
         :
-
-        wordList.map((idx, index) => (
-          wordData[idx] ?
-            <WordFunction key={index} word={wordData[idx].word} explain={wordData[idx].explain} Abbreviation={wordData[idx].Abbreviation} idx={wordData[idx].idx} bookMark='★'></WordFunction>
+        wordData.map((word, index) => (
+          DisplayArr[word.idx] === true ?
+            <WordFunction word={word.word} explain={word.explain} Abbreviation={word.Abbreviation} idx={word.idx} bookMark='★'></WordFunction>
             :
-            <a key={index}></a>
+            <a></a>
         ))
       }
 
