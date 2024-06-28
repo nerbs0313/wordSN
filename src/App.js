@@ -570,6 +570,7 @@ function App() {
               <LoginInfo email={email} login={login} />
             </div>
             <div className="Head_option2">
+              <PrettyToast />
               <ModalComp changeTheme={changeTheme} selectedTheme={selectedTheme} />
             </div>
           </div>
