@@ -10,7 +10,7 @@ import { toast } from 'react-toastify';
 import { ToastContainer } from 'react-toastify';
 
 const STORAGE_KEY = "@toDos";
-
+const WRONG_ANSWERS_KEY = "@wrongAnswers";
 function PrettyToast(props) {
   const notify = () => toast.warning('로그인 필요!');
 
@@ -144,6 +144,8 @@ function WordSpace(props) {
   let [quizQuestion, setQuizQuestion] = useState(null);
   let [quizOptions, setQuizOptions] = useState([]);
   let [quizAnswer, setQuizAnswer] = useState(null);
+  let [wrongAnswers, setWrongAnswers] = useState({});
+  let [isWrongAnswersVisible, setIsWrongAnswersVisible] = useState(false);
   const [DisplayArr, setDisplayArr] = useState({});
 
   console.log("컴포넌트가 불림");
@@ -165,7 +167,15 @@ function WordSpace(props) {
       console.log(e);
     }
   };
-
+  const loadWrongAnswers = async () => {
+    try {
+      const w = await AsyncStorage.getItem(WRONG_ANSWERS_KEY);
+      const savedWrongAnswers = JSON.parse(w) || {};
+      setWrongAnswers(savedWrongAnswers);
+    } catch (e) {
+      console.log(e);
+    }
+  };
   useEffect(() => {
     console.log("use effect in WordSpace component");
     loadToDos();
@@ -251,34 +261,74 @@ function WordSpace(props) {
   }
 
   const handleQuizAnswer = (option) => {
-    if (option === quizAnswer) {
-      toast.success('정답입니다!', {
-        position: "top-center",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-    } else {
-      toast.warning('오답입니다!', {
-        position: "top-center",
-        autoClose: 2000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
+    const currentDate = new Date().toISOString().split('T')[0]; // Get current date in YYYY-MM-DD format
+    const word = quizQuestion;
+
+    setWrongAnswers(prevState => {
+      const newState = { ...prevState };
+
+      if (!newState[currentDate]) {
+        newState[currentDate] = {};
+      }
+
+      if (!newState[currentDate][word]) {
+        newState[currentDate][word] = { wrong: 0, total: 0 };
+      }
+
+      newState[currentDate][word].total += 1;
+
+      if (option !== quizAnswer) {
+        newState[currentDate][word].wrong += 1;
+        toast.warning('오답입니다!', {
+          position: "top-center",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      } else {
+        toast.success('정답입니다!', {
+          position: "top-center",
+          autoClose: 2000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+        });
+      }
+
+      return newState;
+    });
+  };
+  const saveWrongAnswers = async (wrongAnswers) => {
+    try {
+      await AsyncStorage.setItem(WRONG_ANSWERS_KEY, JSON.stringify(wrongAnswers));
+    } catch (e) {
+      console.log(e);
     }
   };
+
+  useEffect(() => {
+    saveWrongAnswers(wrongAnswers);
+  }, [wrongAnswers]);
+
 
   return (
     <div className="wordListCss">
       {props.bookMarkPage && (
         <div className="quizContainer">
           <button onClick={generateQuiz}>퀴즈 생성</button>
+          <button onClick={() => {
+            if (props.login === 'true') {
+              setIsWrongAnswersVisible(!isWrongAnswersVisible);
+            } else {
+              toast.warning('로그인 필요!');
+            }
+          }}>오답 노트</button>
+
           {quizQuestion && (
             <div className="quiz">
               <h4 className={props.bgcolor ? "quizQuestion dark" : "quizQuestion light"}>{quizQuestion}</h4>
@@ -289,6 +339,19 @@ function WordSpace(props) {
                   </li>
                 ))}
               </ul>
+            </div>
+          )}
+          {isWrongAnswersVisible && (
+            <div className="wrongAnswers">
+              <h4>오답 노트</h4>
+              {Object.keys(wrongAnswers).map(date => (
+                <div key={date}>
+                  <h5>{date}</h5>
+                  {Object.keys(wrongAnswers[date]).map(word => (
+                    <p key={word}>{word}: {wrongAnswers[date][word].wrong}회 / {wrongAnswers[date][word].total}회</p>
+                  ))}
+                </div>
+              ))}
             </div>
           )}
         </div>
