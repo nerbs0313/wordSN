@@ -321,13 +321,13 @@ function WordSpace(props) {
       {props.bookMarkPage && (
         <div className="quizContainer">
           <button onClick={generateQuiz}>퀴즈 생성</button>
-          <button onClick={() => {
+          {/* <button onClick={() => {
             if (props.login === 'true') {
               setIsWrongAnswersVisible(!isWrongAnswersVisible);
             } else {
               toast.warning('로그인 필요!');
             }
-          }}>오답 노트</button>
+          }}>오답 노트</button> */}
 
           {quizQuestion && (
             <div className="quiz">
@@ -490,43 +490,43 @@ function App() {
       case 'peach':
         BackgroundColor = '#FEEDE3';
         HeadColor = '#FF9797';
-        wordbackColor = 'white';
+        wordbackColor = `url('https://i.imgur.com/jOs8eaX.png')`;
         wordColor = 'black';
         break;
       case 'sky':
         BackgroundColor = '#E1FAB6';
         HeadColor = '#D1F3FF';
-        wordbackColor = 'white';
+        wordbackColor = `url('https://i.imgur.com/yGAegfw.png')`;
         wordColor = 'black';
         break;
       case 'autumn':
         BackgroundColor = '#FEF8B0';
         HeadColor = '#F6B36E';
-        wordbackColor = 'white';
+        wordbackColor = `url('https://i.imgur.com/yGAegfw.png')`;
         wordColor = 'black';
         break;
       case 'candy':
         BackgroundColor = '#D3EBF1';
         HeadColor = '#F6C4D3';
-        wordbackColor = 'white';
+        wordbackColor = `url('https://i.imgur.com/PLc6GPL.png')`;
         wordColor = 'black';
         break;
       case 'green':
         BackgroundColor = '#F6C4D3';
         HeadColor = '#B8DBD3';
-        wordbackColor = 'white';
+        wordbackColor = `url('https://i.imgur.com/haBLzZQ.png')`;
         wordColor = 'black';
         break;
       case 'bug':
         BackgroundColor = '#FEF8B0';
         HeadColor = '#F6B36E';
-        wordbackColor = 'white';
+        wordbackColor = `url('https://i.imgur.com/WOEH1KB.png')`;
         wordColor = 'black';
         break;
       default:
         BackgroundColor = '#EFC6E2';
         HeadColor = '#DEC4F5';
-        wordbackColor = 'white';
+        wordbackColor = `url('https://i.imgur.com/WOEH1KB.png')`;
         wordColor = 'black';
         break;
     }
@@ -543,7 +543,7 @@ function App() {
       ? <div>
         <div className="black-nav">
           <div>
-            <img className="name" src={`${process.env.PUBLIC_URL}/images/namm.png`} alt="My Image" />
+            <img className="name" src={`${process.env.PUBLIC_URL}/images/namm2.png`} alt="My Image" />
           </div>
           <div className="Head_option">
             <SearchInputBox searchInput={() => { }} />
@@ -555,7 +555,7 @@ function App() {
             }} />
           </div>
         </div>
-        <WordSpace bookMarkPage={false} />
+        <WordSpace bookMarkPage={false} login={login} />
       </div>
       : <div>
         <div className="black-nav">
@@ -575,7 +575,7 @@ function App() {
             </div>
           </div>
         </div>
-        <WordSpace bookMarkPage={true} />
+        <WordSpace bookMarkPage={true} login={login} />
       </div>
   );
 }
