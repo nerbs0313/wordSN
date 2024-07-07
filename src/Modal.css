@@ -1,0 +1,103 @@
+.modal-wrapper {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1001;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 20px;
+    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2);
+    border-radius: 12px;
+    width: 400px;
+    max-width: 80%;
+  }
+  
+  .modal-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .close-button {
+    align-self: flex-end;
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: #555;
+    margin-bottom: 10px;
+  }
+  
+  .close-button:hover {
+    color: #333;
+  }
+  
+  .button-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 20px;
+  }
+  
+  .button-container button {
+    margin: 0 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    border: none;
+    border-radius: 8px;
+  }
+  
+  .button-container button:focus {
+    outline: none;
+  }
+  
+  .save-button {
+    white-space: nowrap;
+
+    background-color: #4caf50;
+    color: white;
+  }
+  
+  .load-button {
+    white-space: nowrap;
+
+    background-color: #2196f3;
+    color: white;
+  }
+  
+  .login-logout-button {
+    white-space: nowrap;
+
+    background-color: #ff9800;
+    color: white;
+  }
+  
+  .theme-select {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.theme-select label {
+    margin-right: 10px;
+    font-weight: bold;
+    font-size: 16px;
+    font-family: 'Arial', sans-serif; /* 원하는 폰트 패밀리로 변경 */
+    color: #555;
+    text-transform: uppercase; /* 텍스트 대문자 변환 */
+    letter-spacing: 1px; /* 글자 간격 조정 */
+}
+
+.theme-select select {
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+
+.theme-select select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
