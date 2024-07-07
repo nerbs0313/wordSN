@@ -112,7 +112,6 @@ const Modal = ({ closeModal, changeTheme, selectedTheme }) => {
           <label htmlFor="theme-select">테마 선택 </label>
           <select id="theme-select" value={selectedTheme} onChange={handleThemeChange}>
             <option value="light">Light</option>
-            <option value="dark">Dark</option>
             <option value="peach">Peach</option>
             <option value="sky">Sky</option>
             <option value="autumn">Autumn</option>

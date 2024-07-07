@@ -11,6 +11,8 @@ import { ToastContainer } from 'react-toastify';
 
 const STORAGE_KEY = "@toDos";
 const WRONG_ANSWERS_KEY = "@wrongAnswers";
+const THEME_KEY = "@theme";
+const PREV_THEME_KEY = "@pretheme";
 function PrettyToast(props) {
   const notify = () => toast.warning('로그인 필요!');
 
@@ -443,7 +445,7 @@ function App() {
   useEffect(() => {
     const fetchTheme = async () => {
       try {
-        const savedTheme = await AsyncStorage.getItem('@theme');
+        const savedTheme = await AsyncStorage.getItem(THEME_KEY);
         if (savedTheme) {
           setTheme(savedTheme);
           setSelectedTheme(savedTheme); // 초기 선택 테마 설정
@@ -459,12 +461,39 @@ function App() {
   // 테마 변경 함수: 테마 변경 후 AsyncStorage에 저장
   const changeTheme = async (selectedTheme) => {
     try {
-      await AsyncStorage.setItem('@theme', selectedTheme);
+      await AsyncStorage.setItem(THEME_KEY, selectedTheme);
       setTheme(selectedTheme);
       setSelectedTheme(selectedTheme); // 테마 변경 시 선택된 테마 업데이트
     } catch (error) {
       console.error('Error saving theme to AsyncStorage:', error);
     }
+  };
+
+  const revertTheme = async () => {
+    try {
+      var prevTheme = '';
+      var curTheme = '';
+      var ToTheme = '';
+      prevTheme = await AsyncStorage.getItem(PREV_THEME_KEY);
+      curTheme = await AsyncStorage.getItem(THEME_KEY);
+
+      await AsyncStorage.setItem(PREV_THEME_KEY, curTheme);
+
+      if (curTheme === 'dark') {
+        if (prevTheme === null) {
+          ToTheme = 'light';
+        }
+        else {
+          ToTheme = prevTheme;
+        }
+      }
+      else {
+        ToTheme = 'dark';
+      }
+
+      changeTheme(ToTheme);
+    }
+    catch (error) { }
   };
 
   const urlParams = new URLSearchParams(window.location.search);
@@ -548,7 +577,7 @@ function App() {
           <div className="Head_option">
             <SearchInputBox searchInput={() => { }} />
             <RevertColor revertColor={() => {
-              changeTheme(theme === 'light' ? 'dark' : 'light'); // 토글하는 예제로 수정
+              revertTheme();
             }} />
             <OpenBookMark openBookMark={() => {
               bookmarkAfter('☆');
