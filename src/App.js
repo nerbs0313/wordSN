@@ -507,55 +507,55 @@ function App() {
       case 'light':
         BackgroundColor = '#F7E3EE';
         HeadColor = '#F298C0';
-        wordbackColor = `url('https://i.imgur.com/ZRT20vs.png')`;
+        wordbackColor = `url(${process.env.PUBLIC_URL}/images/light.png)`;
         wordColor = 'black';
         break;
       case 'dark':
         BackgroundColor = 'black';
         HeadColor = '#1C1C1C';
-        wordbackColor = `url('https://i.imgur.com/KjAaaFN.png')`;
+        wordbackColor = `url(${process.env.PUBLIC_URL}/images/dark.png)`;
         wordColor = 'white';
         break;
       case 'peach':
         BackgroundColor = '#FEEDE3';
         HeadColor = '#FF9797';
-        wordbackColor = `url('https://i.imgur.com/jOs8eaX.png')`;
+        wordbackColor = `url(${process.env.PUBLIC_URL}/images/peach.png)`;
         wordColor = 'black';
         break;
       case 'sky':
         BackgroundColor = '#E1FAB6';
         HeadColor = '#D1F3FF';
-        wordbackColor = `url('https://i.imgur.com/yGAegfw.png')`;
+        wordbackColor = `url(${process.env.PUBLIC_URL}/images/sky.png)`;
         wordColor = 'black';
         break;
       case 'autumn':
         BackgroundColor = '#FEF8B0';
         HeadColor = '#F6B36E';
-        wordbackColor = `url('https://i.imgur.com/yGAegfw.png')`;
+        wordbackColor = `url(${process.env.PUBLIC_URL}/images/autumn.png)`;
         wordColor = 'black';
         break;
       case 'candy':
         BackgroundColor = '#D3EBF1';
         HeadColor = '#F6C4D3';
-        wordbackColor = `url('https://i.imgur.com/PLc6GPL.png')`;
+        wordbackColor = `url(${process.env.PUBLIC_URL}/images/candy.png)`;
         wordColor = 'black';
         break;
       case 'green':
         BackgroundColor = '#F6C4D3';
         HeadColor = '#B8DBD3';
-        wordbackColor = `url('https://i.imgur.com/haBLzZQ.png')`;
+        wordbackColor = `url(${process.env.PUBLIC_URL}/images/green.png)`;
         wordColor = 'black';
         break;
       case 'bug':
         BackgroundColor = '#FEF8B0';
         HeadColor = '#F6B36E';
-        wordbackColor = `url('https://i.imgur.com/WOEH1KB.png')`;
+        wordbackColor = `url(${process.env.PUBLIC_URL}/images/purple.png)`;
         wordColor = 'black';
         break;
       default:
         BackgroundColor = '#EFC6E2';
         HeadColor = '#DEC4F5';
-        wordbackColor = `url('https://i.imgur.com/WOEH1KB.png')`;
+        wordbackColor = `url(${process.env.PUBLIC_URL}/images/purple.png)`;
         wordColor = 'black';
         break;
     }
