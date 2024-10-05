@@ -18,7 +18,7 @@ const naver = (props) => {
     };
 
     const NaverLogout = () => {
-        window.location.href = `http://courtmarket.shop/wordSN/index.html`;
+        window.location.href = `http://nerbs0313.godohosting.com/wordSN/index.html`;
     };
 
     return login === 'true' ?
