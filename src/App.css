@@ -191,11 +191,12 @@ textarea {
 }
 /* 퀴즈 관련 스타일 추가 */
 .quizContainer {
-
   border-radius: 10px;
   padding: 20px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
+  max-height: 400px; /* 최대 높이를 설정하여 스크롤이 생기게 함 */
+  overflow-y: auto; /* 수직 스크롤 허용 */
 }
 
 .quizQuestion {
@@ -253,4 +254,48 @@ button {
 
 button:hover {
   background-color: #1c2541;
+}
+
+.button-container {
+  text-align: center; /* 버튼들을 가운데 정렬 */
+}
+
+.quiz-button, .wrong-answers-button {
+  margin-right: 15px; /* 버튼 사이에 15px 여백 추가 */
+}
+
+.wrongAnswersTitle,
+.wrongAnswersDate,
+.wrongAnswersWord {
+    /* 퀴즈와 동일한 색상 */
+    color: var(--your-text-color); /* 적절한 색상 변수를 설정 */
+}
+
+.wrongAnswersWord {
+  margin-top: 2px; /* 날짜와 단어 항목 사이의 간격을 줄임 (원하는 간격으로 조정 가능) */
+  margin-bottom: 2px; /* 아래쪽 마진도 줄임 (원하는 간격으로 조정 가능) */
+}
+
+.wrongAnswersTitle.light {
+  color: black; /* 라이트 모드에서의 텍스트 색상 */
+}
+
+.wrongAnswersTitle.dark {
+  color: white; /* 다크 모드에서의 텍스트 색상 */
+}
+
+.wrongAnswersDate.light {
+  color: black; /* 날짜 텍스트 색상 (라이트 모드) */
+}
+
+.wrongAnswersDate.dark {
+  color: white; /* 날짜 텍스트 색상 (다크 모드) */
+}
+
+.wrongAnswersWord.light {
+  color: black; /* 단어 텍스트 색상 (라이트 모드) */
+}
+
+.wrongAnswersWord.dark {
+  color: white; /* 단어 텍스트 색상 (다크 모드) */
 }

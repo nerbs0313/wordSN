@@ -148,6 +148,7 @@ function WordSpace(props) {
   let [quizAnswer, setQuizAnswer] = useState(null);
   let [wrongAnswers, setWrongAnswers] = useState({});
   let [isWrongAnswersVisible, setIsWrongAnswersVisible] = useState(false);
+  let [isQuizVisible, setIsQuizVisible] = useState(false);
   const [DisplayArr, setDisplayArr] = useState({});
 
   console.log("컴포넌트가 불림");
@@ -169,21 +170,60 @@ function WordSpace(props) {
       console.log(e);
     }
   };
-  const loadWrongAnswers = async () => {
+
+  const loadWrongAnswersFromDB = async (email) => {
     try {
-      const w = await AsyncStorage.getItem(WRONG_ANSWERS_KEY);
-      const savedWrongAnswers = JSON.parse(w) || {};
-      setWrongAnswers(savedWrongAnswers);
-    } catch (e) {
-      console.log(e);
+      const response = await fetch(`${process.env.REACT_APP_NAVER_REDIRECT_URL}/api/wrong-answers?email=${encodeURIComponent(email)}`);
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
+      console.log('Loaded wrong answers from DB:', data); // 로드된 오답 목록 로그
+      return data;
+    } catch (error) {
+      console.error('Failed to load wrong answers:', error);
+      return []; // 에러 발생 시 빈 배열 반환
     }
   };
+
   useEffect(() => {
     console.log("use effect in WordSpace component");
     loadToDos();
+
+    const loadData = async (email) => {
+
+      console.log(email);
+      const savedData = await loadWrongAnswersFromDB(email); // DB에서 모든 데이터 로드
+
+      const newState = {}; // 상태 초기화
+      savedData.forEach(entry => {
+        const { date, word, wrong, total } = entry;
+
+        if (!newState[date]) {
+          newState[date] = {};
+        }
+
+        newState[date][word] = { wrong, total }; // 날짜와 단어를 키로 사용하여 상태 업데이트
+      });
+
+      setWrongAnswers(newState); // 상태 업데이트
+    };
+
+    // 데이터 로드 함수 호출
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const email = urlParams.get('email');
+    if (email) {
+      loadData(email);
+    }
   }, []);
 
-  const generateQuiz = () => {
+  const generateQuiz = (ControlDisplay) => {
+    if (ControlDisplay) {
+      setIsQuizVisible(!isQuizVisible);
+    }
     if (wordList != null) {
       const bookmarkedWords = wordData.filter(word => wordList.includes(word.idx));
       if (bookmarkedWords.length > 0) {
@@ -198,6 +238,7 @@ function WordSpace(props) {
         setQuizQuestion(questionWord.word);
         setQuizOptions(shuffleArray(options));
         setQuizAnswer(questionWord.explain);
+        setIsWrongAnswersVisible(false);
       }
     }
   };
@@ -263,8 +304,14 @@ function WordSpace(props) {
   }
 
   const handleQuizAnswer = (option) => {
-    const currentDate = new Date().toISOString().split('T')[0]; // Get current date in YYYY-MM-DD format
+    const currentDate = new Date(new Date().getTime() + 9 * 60 * 60 * 1000)
+    .toISOString()
+    .split('T')[0];
+    console.log(currentDate);
     const word = quizQuestion;
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const email = urlParams.get('email');
 
     setWrongAnswers(prevState => {
       const newState = { ...prevState };
@@ -288,7 +335,6 @@ function WordSpace(props) {
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
-          progress: undefined,
         });
       } else {
         toast.success('정답입니다!', {
@@ -298,11 +344,15 @@ function WordSpace(props) {
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
-          progress: undefined,
         });
       }
 
-      return newState;
+      // DB에 저장
+      if (email) {
+        saveWrongAnswerToDB(currentDate, word, newState[currentDate][word].wrong, newState[currentDate][word].total, email);
+      }
+      return newState; // 로드 ( 오답 노트 상태 업데이트 )
+
     });
   };
   const saveWrongAnswers = async (wrongAnswers) => {
@@ -318,20 +368,46 @@ function WordSpace(props) {
   }, [wrongAnswers]);
 
 
+
+  const saveWrongAnswerToDB = async (date, word, wrong, total, email) => {
+    try {
+      await fetch(`${process.env.REACT_APP_NAVER_REDIRECT_URL}/api/wrong-answers`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ date, word, wrong, total, email }), // 이메일 포함
+      });
+    } catch (error) {
+      console.error('Failed to save wrong answer:', error);
+    }
+  };
+
+
   return (
     <div className="wordListCss">
       {props.bookMarkPage && (
         <div className="quizContainer">
-          <button onClick={generateQuiz}>퀴즈 생성</button>
-          {/* <button onClick={() => {
-            if (props.login === 'true') {
-              setIsWrongAnswersVisible(!isWrongAnswersVisible);
-            } else {
-              toast.warning('로그인 필요!');
-            }
-          }}>오답 노트</button> */}
+          <div className="button-container">
+            <button className="quiz-button" onClick={() => {
+              if (props.login === 'true') {
+                generateQuiz(true);
+              } else {
+                toast.warning('로그인 필요!');
+              }
+            }}>북마크 랜덤 퀴즈</button>
 
-          {quizQuestion && (
+            <button className="wrong-answers-button" onClick={() => {
+              if (props.login === 'true') {
+                setIsWrongAnswersVisible(!isWrongAnswersVisible);
+                setIsQuizVisible(false);
+              } else {
+                toast.warning('로그인 필요!');
+              }
+            }}>오답 노트</button>
+          </div>
+
+          {isQuizVisible && !isWrongAnswersVisible && quizQuestion && (
             <div className="quiz">
               <h4 className={props.bgcolor ? "quizQuestion dark" : "quizQuestion light"}>{quizQuestion}</h4>
               <ul className="quizOptions">
@@ -341,16 +417,20 @@ function WordSpace(props) {
                   </li>
                 ))}
               </ul>
+              <button onClick={() => generateQuiz(false)}>다음</button>
             </div>
           )}
-          {isWrongAnswersVisible && (
+
+          {!isQuizVisible && isWrongAnswersVisible && (
             <div className="wrongAnswers">
-              <h4>오답 노트</h4>
+              <h4 className={props.bgcolor ? "wrongAnswersTitle dark" : "wrongAnswersTitle light"}>오답 노트</h4>
               {Object.keys(wrongAnswers).map(date => (
                 <div key={date}>
-                  <h5>{date}</h5>
+                  <h5 className={props.bgcolor ? "wrongAnswersDate dark" : "wrongAnswersDate light"}>{date}</h5>
                   {Object.keys(wrongAnswers[date]).map(word => (
-                    <p key={word}>{word}: {wrongAnswers[date][word].wrong}회 / {wrongAnswers[date][word].total}회</p>
+                    <p key={word} className={props.bgcolor ? "wrongAnswersWord dark" : "wrongAnswersWord light"}>
+                      {word}: {wrongAnswers[date][word].wrong}회 / {wrongAnswers[date][word].total}회
+                    </p>
                   ))}
                 </div>
               ))}
@@ -419,6 +499,35 @@ const styles = `
 
   .quizOption:hover {
     background-color: #f0f0f0;
+  }
+  /* Wrong Answers Styles */
+  .wrongAnswers {
+    padding: 10px;
+    border-top: 2px solid #ccc; /* 상단 경계선 */
+  }
+
+  .wrongAnswersTitle.light {
+    color: var(--word-color); /* 라이트 모드 텍스트 색상 */
+  }
+
+  .wrongAnswersTitle.dark {
+    color: var(--word-color); /* 다크 모드 텍스트 색상 */
+  }
+
+  .wrongAnswersDate.light {
+    color: var(--word-color); /* 라이트 모드에서 날짜 색상 */
+  }
+
+  .wrongAnswersDate.dark {
+    color: var(--word-color); /* 다크 모드에서 날짜 색상 */
+  }
+
+  .wrongAnswersWord.light {
+    color: var(--word-color); /* 라이트 모드에서 단어 색상 */
+  }
+
+  .wrongAnswersWord.dark {
+    color: var(--word-color); /* 다크 모드에서 단어 색상 */
   }
 `;
 

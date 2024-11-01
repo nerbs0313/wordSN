@@ -100,13 +100,12 @@ const Modal = ({ closeModal, changeTheme, selectedTheme }) => {
     <div className="modal-wrapper">
       <div className="modal-content">
         <button className="close-button" onClick={closeModal}>X</button>
-        <div className="button-container">
 
+        <div className="button-container">
           <Naver email={email} login={login} />
 
           <button className="save-button" onClick={handleSave}>저장</button>
           <button className="load-button" onClick={handleLoad}>불러오기</button>
-
         </div>
         <div className="theme-select">
           <label htmlFor="theme-select">테마 선택 </label>
@@ -120,7 +119,6 @@ const Modal = ({ closeModal, changeTheme, selectedTheme }) => {
             <option value="purple">Purple</option>
           </select>
         </div>
-
       </div>
     </div>
   );
