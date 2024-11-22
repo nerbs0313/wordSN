@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import wordData from './Data';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Modal from './Modal';
+import ModalLogin from './ModalLogin';
 
 import 'react-toastify/dist/ReactToastify.css';
 import { toast } from 'react-toastify';
@@ -36,6 +37,7 @@ function PrettyToast(props) {
 
 function ModalComp({ changeTheme, selectedTheme }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isNaverModalOpen, setIsNaverModalOpen] = useState(false); // 네이버 모달 상태 추가
 
   const openModal = () => {
     setIsModalOpen(true);
@@ -45,36 +47,35 @@ function ModalComp({ changeTheme, selectedTheme }) {
     setIsModalOpen(false);
   };
 
+  const openNaverModal = () => {
+    setIsNaverModalOpen(true); // 네이버 모달 열기
+  };
+
+  const closeNaverModal = () => {
+    setIsNaverModalOpen(false); // 네이버 모달 닫기
+  };
+
   return (
     <div>
-      <img className="headingItemOption2" src={`${process.env.PUBLIC_URL}/images/setting.png`} alt="load" onClick={openModal} />
-      {isModalOpen && <div className="backdrop" onClick={closeModal} />}
-      {isModalOpen && <Modal closeModal={closeModal} changeTheme={changeTheme} selectedTheme={selectedTheme} />}
+      <div style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
+        <img
+          className="naverIcon"
+          src={`${process.env.PUBLIC_URL}/images/naver.png`}
+          alt="Naver"
+          onClick={openNaverModal} // 클릭 시 네이버 모달 열기
+        />
+        <img className="headingItemOption2" src={`${process.env.PUBLIC_URL}/images/setting.png`} alt="load" onClick={openModal} />
+        {isModalOpen && <div className="backdrop" onClick={closeModal} />}
+        {isModalOpen && <Modal closeModal={closeModal} changeTheme={changeTheme} selectedTheme={selectedTheme} />}
+      </div>
+
+      {/* 네이버 모달 */}
+      {isNaverModalOpen && <div className="backdrop" onClick={closeNaverModal} />}
+      {isNaverModalOpen && <ModalLogin closeModal={closeNaverModal} />} {/* NaverModal은 별도로 정의 필요 */}
     </div>
   );
 }
 
-function SaveBookMark(props) {
-  return (
-    <img className="headingItemOption2" src={`${process.env.PUBLIC_URL}/images/save.png`} alt="save" onClick={async (event) => {
-      event.preventDefault();
-      const url = new URL(window.location.href);
-      const urlParams = url.searchParams;
-      var email = urlParams.get('email');
-      var login = urlParams.get('login');
-      const s = await AsyncStorage.getItem(STORAGE_KEY);
-      if (!email || !login) {
-        toast.warning('로그인 필요!');
-      } else {
-        fetch(`${process.env.REACT_APP_NAVER_REDIRECT_URL}/saveBookmark/inform?email=${email}&bookMarklist=${s}`)
-          .then((res) => res.text())
-          .then((data) => console.log(data));
-        props.saveBookMark();
-        toast.warning('저장 완료');
-      }
-    }} />
-  );
-}
 
 function BackToHome(props) {
   return <h4 className="backButton" onClick={(event) => {
@@ -305,8 +306,8 @@ function WordSpace(props) {
 
   const handleQuizAnswer = (option) => {
     const currentDate = new Date(new Date().getTime() + 9 * 60 * 60 * 1000)
-    .toISOString()
-    .split('T')[0];
+      .toISOString()
+      .split('T')[0];
     console.log(currentDate);
     const word = quizQuestion;
 
@@ -421,21 +422,33 @@ function WordSpace(props) {
             </div>
           )}
 
-          {!isQuizVisible && isWrongAnswersVisible && (
-            <div className="wrongAnswers">
-              <h4 className={props.bgcolor ? "wrongAnswersTitle dark" : "wrongAnswersTitle light"}>오답 노트</h4>
-              {Object.keys(wrongAnswers).map(date => (
+{!isQuizVisible && isWrongAnswersVisible && (
+    <div className="wrongAnswers">
+        {Object.keys(wrongAnswers)
+            .sort((a, b) => {
+                return new Date(b) - new Date(a);
+            }) // Date 기준 내림차순 정렬
+            .map(date => (
                 <div key={date}>
-                  <h5 className={props.bgcolor ? "wrongAnswersDate dark" : "wrongAnswersDate light"}>{date}</h5>
-                  {Object.keys(wrongAnswers[date]).map(word => (
-                    <p key={word} className={props.bgcolor ? "wrongAnswersWord dark" : "wrongAnswersWord light"}>
-                      {word}: {wrongAnswers[date][word].wrong}회 / {wrongAnswers[date][word].total}회
-                    </p>
-                  ))}
+                    <h5 className={props.bgcolor ? "wrongAnswersDate dark" : "wrongAnswersDate light"}>{date}</h5>
+                    {Object.keys(wrongAnswers[date])
+                        .sort((a, b) => {
+                            return wrongAnswers[date][b].wrong - wrongAnswers[date][a].wrong;
+                        }) // wrong 값 기준 내림차순 정렬
+                        .map(word => (
+                            <div key={word} className={props.bgcolor ? "wrongAnswersWord dark" : "wrongAnswersWord light"}>
+                                <span className="word">{word}</span>
+                                <span className="wrongCount">
+                                    {wrongAnswers[date][word].wrong}회
+                                </span>
+                            </div>
+                        ))
+                    }
                 </div>
-              ))}
-            </div>
-          )}
+            ))
+        }
+    </div>
+)}
         </div>
       )}
       {props.bookMarkPage === false ?
@@ -472,6 +485,7 @@ const styles = `
 
   .quiz {
     margin-top: 10px;
+    max-height : 300px;
   }
 
   .quizQuestion.light {
@@ -502,8 +516,9 @@ const styles = `
   }
   /* Wrong Answers Styles */
   .wrongAnswers {
-    padding: 10px;
-    border-top: 2px solid #ccc; /* 상단 경계선 */
+    margin-top: 10px;
+    max-height: 272.6px; /* 원하는 최대 높이 설정 */
+    overflow-y: auto; /* 오답 노트에서 수직 스크롤 허용 */
   }
 
   .wrongAnswersTitle.light {
@@ -515,18 +530,34 @@ const styles = `
   }
 
   .wrongAnswersDate.light {
+    margin-bottom: 10px; /* 아래쪽에만 여백 추가 */
+    margin-top: 10px; /* 아래쪽에만 여백 추가 */
+    font-size: 24px;   /* 폰트 크기 */
+    text-align: center; /* 중앙 정렬 */
+    font-family: Arial, sans-serif;   /* 폰트 Arial 설정 */
     color: var(--word-color); /* 라이트 모드에서 날짜 색상 */
   }
 
   .wrongAnswersDate.dark {
+    margin-bottom: 10px; /* 아래쪽에만 여백 추가 */
+    margin-top: 10px; /* 아래쪽에만 여백 추가 */
+    font-size: 24px;   /* 폰트 크기 */
+    text-align: center; /* 중앙 정렬 */
+    font-family: Arial, sans-serif;   /* 폰트 Arial 설정 */
     color: var(--word-color); /* 다크 모드에서 날짜 색상 */
   }
 
   .wrongAnswersWord.light {
+    display: flex;
+    justify-content: center; /* 중앙 정렬 */
+    padding: 4px 0;
     color: var(--word-color); /* 라이트 모드에서 단어 색상 */
   }
 
   .wrongAnswersWord.dark {
+    display: flex;
+    justify-content: center; /* 중앙 정렬 */
+    padding: 4px 0;
     color: var(--word-color); /* 다크 모드에서 단어 색상 */
   }
 `;

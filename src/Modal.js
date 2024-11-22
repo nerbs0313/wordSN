@@ -17,8 +17,6 @@ const Modal = ({ closeModal, changeTheme, selectedTheme }) => {
   var email = urlParams.get('email')
   var login = urlParams.get('login')
 
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
   const handleSave = async (event) => {
     event.preventDefault();
     const url = new URL(window.location.href);
@@ -78,33 +76,13 @@ const Modal = ({ closeModal, changeTheme, selectedTheme }) => {
     }
   }
 
-
-  const handleLoginLogoutToggle = () => {
-
-    setIsLoggedIn(prevState => !prevState);
-  };
-
-  const loginLogoutContent = isLoggedIn ? '로그아웃' : '로그인';
-
-  const handleLoginLogout = () => {
-    if (isLoggedIn) {
-      // 로그아웃 로직 구현
-      alert('로그아웃되었습니다.');
-    } else {
-      // 로그인 로직 구현
-      alert('로그인되었습니다.');
-    }
-  };
-
   return (
     <div className="modal-wrapper">
       <div className="modal-content">
         <button className="close-button" onClick={closeModal}>X</button>
 
         <div className="button-container">
-          <Naver email={email} login={login} />
-
-          <button className="save-button" onClick={handleSave}>저장</button>
+          <button className="save-button" onClick={handleSave}>북마크 저장</button>
           <button className="load-button" onClick={handleLoad}>불러오기</button>
         </div>
         <div className="theme-select">

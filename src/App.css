@@ -63,6 +63,16 @@ html {
   float: right;
 }
 
+.naverIcon{
+  width: 40px;
+  height:auto;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  align-items: center;
+  transition: transform 0.3s ease; /* 호버 효과를 위한 트랜지션 추가 */
+}
+
 .headingItemOption2{
   width: 40px;
   height:auto;
@@ -196,7 +206,6 @@ textarea {
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   margin-bottom: 20px;
   max-height: 400px; /* 최대 높이를 설정하여 스크롤이 생기게 함 */
-  overflow-y: auto; /* 수직 스크롤 허용 */
 }
 
 .quizQuestion {
@@ -261,6 +270,7 @@ button:hover {
 }
 
 .quiz-button, .wrong-answers-button {
+  white-space: nowrap;
   margin-right: 15px; /* 버튼 사이에 15px 여백 추가 */
 }
 
@@ -292,10 +302,20 @@ button:hover {
   color: white; /* 날짜 텍스트 색상 (다크 모드) */
 }
 
-.wrongAnswersWord.light {
-  color: black; /* 단어 텍스트 색상 (라이트 모드) */
+
+
+
+.word {
+  width: 300px; /* 단어 폭 설정 */
+  text-align: left; /* 단어 자체도 중앙 정렬 */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 18px;   /* 폰트 크기 */
 }
 
-.wrongAnswersWord.dark {
-  color: white; /* 단어 텍스트 색상 (다크 모드) */
+.wrongCount {
+  font-size: 18px;   /* 폰트 크기 */
+  width: 80px; /* 오답 횟수 폭 설정 */
+  text-align: center; /* 오답 횟수 자체도 중앙 정렬 */
 }
