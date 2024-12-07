@@ -2,16 +2,23 @@
 <html lang="en">
 
 <head>
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=UA-168748504-1"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-168748504-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
 
-  gtag('config', 'UA-168748504-1');
-</script>
-
+    gtag('config', 'UA-168748504-1');
+  </script>
+  <style>
+    /* 전체 페이지 텍스트 선택 방지 */
+    body,
+    html {
+      user-select: none;
+      /* 텍스트 선택 방지 */
+    }
+  </style>
   <meta charset="utf-8" />
   <link rel="icon" href="%PUBLIC_URL%/wordSN.ico" />
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
