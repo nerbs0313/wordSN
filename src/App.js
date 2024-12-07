@@ -78,10 +78,10 @@ function ModalComp({ changeTheme, selectedTheme }) {
 
 
 function BackToHome(props) {
-  return <h4 className="backButton" onClick={(event) => {
+  return <img className="backButton" src={`${process.env.PUBLIC_URL}/images/back.png`} alt="back" onClick={(event) => {
     event.preventDefault();
     props.backToHome();
-  }}> ＜ </h4>
+  }} />
 }
 
 function OpenBookMark(props) {
@@ -114,7 +114,7 @@ function SearchInputBox(props) {
     }
   }
   return (
-    <textarea placeholder="검색할 단어를 입력하세요" className="headingItemOptionSearch" onChange={(e) => {
+    <textarea placeholder="단어를 입력하세요!" className="headingItemOptionSearch" onChange={(e) => {
       setText(e.target.value);
     }}></textarea>
   );
@@ -129,8 +129,6 @@ function WordComponent(props) {
       }} className="wordColor">{props.word}</div>
       <div className="bookmark">
         <div onClick={props.onChangeBookMark}>{props.bookMark}</div>
-        <div>　</div>
-        <div>　</div>
       </div>
     </div>
   );
@@ -273,7 +271,7 @@ function WordSpace(props) {
     }
 
     return (
-      <div id={wordindex} className="wordBGImg">
+      <div id={wordindex} >
         <WordComponent word={display} bookMark={bookmark} onChangeMode={() => {
           if (mode === "word") {
             setMode("explain");
@@ -330,21 +328,33 @@ function WordSpace(props) {
       if (option !== quizAnswer) {
         newState[currentDate][word].wrong += 1;
         toast.warning('오답입니다!', {
-          position: "top-center",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
+          style: {
+            fontFamily: 'DungGeunMo, sans-serif', // 글씨체 설정
+            fontSize: '16px', // 글씨 크기 설정
+            fontWeight: 'bold', // 글씨 굵기 설정
+            whiteSpace: 'pre-line', // 줄 바꿈 적용
+            position: "top-center",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+          }
         });
       } else {
         toast.success('정답입니다!', {
-          position: "top-center",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
+          style: {
+            fontFamily: 'DungGeunMo, sans-serif', // 글씨체 설정
+            fontSize: '16px', // 글씨 크기 설정
+            fontWeight: 'bold', // 글씨 굵기 설정
+            whiteSpace: 'pre-line', // 줄 바꿈 적용
+            position: "top-center",
+            autoClose: 2000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+          }
         });
       }
 
@@ -394,18 +404,34 @@ function WordSpace(props) {
               if (props.login === 'true') {
                 generateQuiz(true);
               } else {
-                toast.warning('로그인 필요!');
+                toast.warning("로그인하시면 쪽지시험,오답노트를 이용하실 수 있어요! ", {
+                  style: {
+                    fontFamily: 'DungGeunMo, sans-serif', // 글씨체 설정
+                    fontSize: '16px', // 글씨 크기 설정
+                    fontWeight: 'bold', // 글씨 굵기 설정
+                    whiteSpace: 'pre-line', // 줄 바꿈 적용
+                  },
+                  icon: <span style={{ fontSize: "40px", marginBottom: "8px", color: "gold" }}>★</span>
+                });
               }
-            }}>북마크 랜덤 퀴즈</button>
+            }}>쪽지시험!</button>
 
             <button className="wrong-answers-button" onClick={() => {
               if (props.login === 'true') {
                 setIsWrongAnswersVisible(!isWrongAnswersVisible);
                 setIsQuizVisible(false);
               } else {
-                toast.warning('로그인 필요!');
+                toast.warning("로그인하시면 쪽지시험,오답노트를 이용하실 수 있어요! ", {
+                  style: {
+                    fontFamily: 'DungGeunMo, sans-serif', // 글씨체 설정
+                    fontSize: '16px', // 글씨 크기 설정
+                    fontWeight: 'bold', // 글씨 굵기 설정
+                    whiteSpace: 'pre-line', // 줄 바꿈 적용
+                  },
+                  icon: <span style={{ fontSize: "40px", marginBottom: "8px", color: "gold" }}>★</span>
+                });
               }
-            }}>오답 노트</button>
+            }}>오답노트!</button>
           </div>
 
           {isQuizVisible && !isWrongAnswersVisible && quizQuestion && (
@@ -418,37 +444,37 @@ function WordSpace(props) {
                   </li>
                 ))}
               </ul>
-              <button onClick={() => generateQuiz(false)}>다음</button>
+              <button className="quiz-button2" onClick={() => generateQuiz(false)}>다음</button>
             </div>
           )}
 
-{!isQuizVisible && isWrongAnswersVisible && (
-    <div className="wrongAnswers">
-        {Object.keys(wrongAnswers)
-            .sort((a, b) => {
-                return new Date(b) - new Date(a);
-            }) // Date 기준 내림차순 정렬
-            .map(date => (
-                <div key={date}>
-                    <h5 className={props.bgcolor ? "wrongAnswersDate dark" : "wrongAnswersDate light"}>{date}</h5>
+          {!isQuizVisible && isWrongAnswersVisible && (
+            <div className="wrongAnswers">
+              {Object.keys(wrongAnswers)
+                .sort((a, b) => {
+                  return new Date(b) - new Date(a);
+                }) // Date 기준 내림차순 정렬
+                .map(date => (
+                  <div key={date}>
+                    <h5 style={{ fontFamily: 'DungGeunMo' }} className={props.bgcolor ? "wrongAnswersDate dark" : "wrongAnswersDate light"}>{date}</h5>
                     {Object.keys(wrongAnswers[date])
-                        .sort((a, b) => {
-                            return wrongAnswers[date][b].wrong - wrongAnswers[date][a].wrong;
-                        }) // wrong 값 기준 내림차순 정렬
-                        .map(word => (
-                            <div key={word} className={props.bgcolor ? "wrongAnswersWord dark" : "wrongAnswersWord light"}>
-                                <span className="word">{word}</span>
-                                <span className="wrongCount">
-                                    {wrongAnswers[date][word].wrong}회
+                      .sort((a, b) => {
+                        return wrongAnswers[date][b].wrong - wrongAnswers[date][a].wrong;
+                      }) // wrong 값 기준 내림차순 정렬
+                      .map(word => (
+                        <div key={word} className={props.bgcolor ? "wrongAnswersWord dark" : "wrongAnswersWord light"}>
+                          <span className="word">{word}</span>
+                          <span className="wrongCount">
+                            {wrongAnswers[date][word].wrong}회
                                 </span>
-                            </div>
-                        ))
+                        </div>
+                      ))
                     }
-                </div>
-            ))
-        }
-    </div>
-)}
+                  </div>
+                ))
+              }
+            </div>
+          )}
         </div>
       )}
       {props.bookMarkPage === false ?
@@ -647,55 +673,55 @@ function App() {
       case 'light':
         BackgroundColor = '#F7E3EE';
         HeadColor = '#F298C0';
-        wordbackColor = `url(${process.env.PUBLIC_URL}/images/light.png)`;
+        wordbackColor = `#d2d2d2`;
         wordColor = 'black';
         break;
       case 'dark':
         BackgroundColor = 'black';
         HeadColor = '#1C1C1C';
-        wordbackColor = `url(${process.env.PUBLIC_URL}/images/dark.png)`;
+        wordbackColor = `#383838`;
         wordColor = 'white';
         break;
       case 'peach':
         BackgroundColor = '#FEEDE3';
         HeadColor = '#FF9797';
-        wordbackColor = `url(${process.env.PUBLIC_URL}/images/peach.png)`;
+        wordbackColor = `#d2d2d2`;
         wordColor = 'black';
         break;
       case 'sky':
         BackgroundColor = '#E1FAB6';
         HeadColor = '#D1F3FF';
-        wordbackColor = `url(${process.env.PUBLIC_URL}/images/sky.png)`;
+        wordbackColor = `#d2d2d2`;
         wordColor = 'black';
         break;
       case 'autumn':
         BackgroundColor = '#FEF8B0';
         HeadColor = '#F6B36E';
-        wordbackColor = `url(${process.env.PUBLIC_URL}/images/autumn.png)`;
+        wordbackColor = `#d2d2d2`;
         wordColor = 'black';
         break;
       case 'candy':
         BackgroundColor = '#D3EBF1';
         HeadColor = '#F6C4D3';
-        wordbackColor = `url(${process.env.PUBLIC_URL}/images/candy.png)`;
+        wordbackColor = `#d2d2d2`;
         wordColor = 'black';
         break;
       case 'green':
         BackgroundColor = '#F6C4D3';
         HeadColor = '#B8DBD3';
-        wordbackColor = `url(${process.env.PUBLIC_URL}/images/green.png)`;
+        wordbackColor = `#d2d2d2`;
         wordColor = 'black';
         break;
       case 'bug':
         BackgroundColor = '#FEF8B0';
         HeadColor = '#F6B36E';
-        wordbackColor = `url(${process.env.PUBLIC_URL}/images/purple.png)`;
+        wordbackColor = `#d2d2d2`;
         wordColor = 'black';
         break;
       default:
         BackgroundColor = '#EFC6E2';
         HeadColor = '#DEC4F5';
-        wordbackColor = `url(${process.env.PUBLIC_URL}/images/purple.png)`;
+        wordbackColor = `#d2d2d2`;
         wordColor = 'black';
         break;
     }
@@ -711,14 +737,13 @@ function App() {
     bookmarkCur === '★'
       ? <div>
         <div className="black-nav">
-          <div>
-            <img className="name" src={`${process.env.PUBLIC_URL}/images/namm2.png`} alt="My Image" />
+          <div style={{ textAlign: 'center' }}>
+            <a className="name">마이</a> <br />
+            <a className="name">의학용어</a>
           </div>
           <div className="Head_option">
             <SearchInputBox searchInput={() => { }} />
-            <RevertColor revertColor={() => {
-              revertTheme();
-            }} />
+
             <OpenBookMark openBookMark={() => {
               bookmarkAfter('☆');
             }} />
@@ -728,14 +753,14 @@ function App() {
       </div>
       : <div>
         <div className="black-nav">
-          <div className="Head_option2">
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }} >
             <BackToHome backToHome={() => {
               bookmarkAfter('★');
             }} />
-            <h4>북마크</h4>
+            <h4 class="name2">즐겨찾기</h4>
           </div>
           <div className="Head_option3">
-            <div>
+            <div style={{ fontFamily: 'DungGeunMo' }} >
               <LoginInfo email={email} login={login} />
             </div>
             <div className="Head_option2">

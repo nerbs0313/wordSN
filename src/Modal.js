@@ -28,14 +28,28 @@ const Modal = ({ closeModal, changeTheme, selectedTheme }) => {
     console.log(login);
     if (!email || !login) {
       console.log('로그인필요');
-      toast.warning('로그인 필요!');
+      toast.warning("로그인하시면 북마크를 \n 이용하실 수 있어요! ", {
+        style: {
+          fontFamily: 'DungGeunMo, sans-serif', // 글씨체 설정
+          fontSize: '16px', // 글씨 크기 설정
+          fontWeight: 'bold', // 글씨 굵기 설정
+          whiteSpace: 'pre-line', // 줄 바꿈 적용
+        }
+      });
     }
     else {
       console.log(s);
       fetch(`${process.env.REACT_APP_NAVER_REDIRECT_URL}/saveBookmark/inform?email=${email}&bookMarklist=${s}`)
         .then((res) => res.text())
         .then((data) => console.log(data));
-      toast.warning('저장 완료');
+        toast.warning("저장 완료!", {
+          style: {
+            fontFamily: 'DungGeunMo, sans-serif', // 글씨체 설정
+            fontSize: '16px', // 글씨 크기 설정
+            fontWeight: 'bold', // 글씨 굵기 설정
+            whiteSpace: 'pre-line', // 줄 바꿈 적용
+          }
+        });
     }
   };
 
@@ -49,7 +63,14 @@ const Modal = ({ closeModal, changeTheme, selectedTheme }) => {
     console.log(login);
     if (!email || !login) {
       console.log('로그인필요');
-      toast.warning('로그인 필요!');
+      toast.warning("로그인하시면 서버에 저장된 즐겨찾기 목록을 불러올 수 있어요!", {
+        style: {
+          fontFamily: 'DungGeunMo, sans-serif', // 글씨체 설정
+          fontSize: '16px', // 글씨 크기 설정
+          fontWeight: 'bold', // 글씨 굵기 설정
+          whiteSpace: 'pre-line', // 줄 바꿈 적용
+        }
+      });
     }
     else {
 
@@ -70,7 +91,14 @@ const Modal = ({ closeModal, changeTheme, selectedTheme }) => {
             window.location.replace("");
           }
           else {
-            toast.warning('저장된 북마크 기록이 없습니다.');
+            toast.warning("저장된 북마크 기록이 없습니다!", {
+              style: {
+                fontFamily: 'DungGeunMo, sans-serif', // 글씨체 설정
+                fontSize: '16px', // 글씨 크기 설정
+                fontWeight: 'bold', // 글씨 굵기 설정
+                whiteSpace: 'pre-line', // 줄 바꿈 적용
+              }
+            });
           }
         });
     }
@@ -80,15 +108,11 @@ const Modal = ({ closeModal, changeTheme, selectedTheme }) => {
     <div className="modal-wrapper">
       <div className="modal-content">
         <button className="close-button" onClick={closeModal}>X</button>
-
-        <div className="button-container">
-          <button className="save-button" onClick={handleSave}>북마크 저장</button>
-          <button className="load-button" onClick={handleLoad}>불러오기</button>
-        </div>
         <div className="theme-select">
-          <label htmlFor="theme-select">테마 선택 </label>
+          <label style={{ fontFamily: 'DungGeunMo' }} htmlFor="theme-select">테마 선택 </label>
           <select id="theme-select" value={selectedTheme} onChange={handleThemeChange}>
             <option value="light">Light</option>
+            <option value="dark">Dark</option>
             <option value="peach">Peach</option>
             <option value="sky">Sky</option>
             <option value="autumn">Autumn</option>

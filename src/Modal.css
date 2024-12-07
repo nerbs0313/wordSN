@@ -5,11 +5,12 @@
     transform: translate(-50%, -50%);
     z-index: 1001;
     background: rgba(255, 255, 255, 0.9);
-    padding: 20px;
+    padding: 10px 20px; /* 위아래 패딩을 줄임 */
     box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.2);
     border-radius: 12px;
     width: 400px;
     max-width: 80%;
+    max-height: 90%; /* 최대 높이 제한 */
   }
   
   .modal-content {
@@ -54,16 +55,16 @@
   
   .save-button {
     white-space: nowrap;
-
     background-color: #4caf50;
     color: white;
+    font-Family: 'DungGeunMo';
   }
   
   .load-button {
     white-space: nowrap;
-
     background-color: #2196f3;
     color: white;
+    font-Family: 'DungGeunMo';
   }
   
   .login-logout-button {
@@ -77,16 +78,17 @@
     margin-top: 20px;
     display: flex;
     align-items: center;
+    font-Family: 'DungGeunMo';
 }
 
 .theme-select label {
     margin-right: 10px;
     font-weight: bold;
     font-size: 16px;
-    font-family: 'Arial', sans-serif; /* 원하는 폰트 패밀리로 변경 */
     color: #555;
     text-transform: uppercase; /* 텍스트 대문자 변환 */
     letter-spacing: 1px; /* 글자 간격 조정 */
+    font-Family: 'DungGeunMo';
 }
 
 .theme-select select {
@@ -94,10 +96,12 @@
     border-radius: 4px;
     border: 1px solid #ccc;
     font-size: 14px;
+    font-Family: 'DungGeunMo';
 }
 
 .theme-select select:focus {
     outline: none;
     border-color: #007bff;
     box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+    font-Family: 'DungGeunMo';
 }

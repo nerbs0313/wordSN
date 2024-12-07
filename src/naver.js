@@ -22,9 +22,9 @@ const naver = (props) => {
     };
 
     return login === 'true' ?
-        <button className="login-logout-button" onClick={NaverLogout}>로그아웃</button>
+        <button style={{ fontFamily: 'DungGeunMo' }} className="login-logout-button" onClick={NaverLogout}>로그아웃</button>
         :
-        <button className="login-logout-button" onClick={NaverLogin}>로그인</button>
+        <button style={{ fontFamily: 'DungGeunMo' }} className="login-logout-button" onClick={NaverLogin}>로그인</button>
 };
 
 export default naver;
