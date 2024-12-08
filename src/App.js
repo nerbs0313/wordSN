@@ -1,6 +1,5 @@
 import './App.css';
 import { useState, useEffect } from 'react';
-import wordData from './Data';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import BackToHome from './BackToHome';  // BackToHome 컴포넌트 가져오기
 import SearchInputBox from './SearchInputBox';  // SearchInputBox 임포트
@@ -8,11 +7,8 @@ import OpenBookMark from './OpenBookMark'; // 경로를 파일 위치에 맞게 
 import PrettyToast from './PrettyToast';
 import LoginInfo from './LoginInfo';
 import ModalComp from './ModalComp';
-import WordComponent from './WordComponent';
-import QuizComponent from './QuizComponent';
+import WordSpace from './WordSpace';
 import 'react-toastify/dist/ReactToastify.css';
-
-const STORAGE_KEY = "@toDos";
 const THEME_KEY = "@theme";
 
 // CSS Styles
@@ -112,127 +108,6 @@ function App() {
   const [bookmarkCur, bookmarkAfter] = useState("★");
   const [theme, setTheme] = useState('light'); // 기본 값은 light로 설정
   const [selectedTheme, setSelectedTheme] = useState('light');
-
-  function WordSpace(props) {
-    let [wordList, setWordList] = useState([]);
-    const [DisplayArr, setDisplayArr] = useState({});
-
-    console.log("컴포넌트가 불림");
-    const loadToDos = async () => {
-      try {
-        const s = await AsyncStorage.getItem(STORAGE_KEY);
-        console.log("loadToDos ", s);
-        const savedWordList = JSON.parse(s);
-        setWordList(savedWordList);
-
-        const displayArr = {};
-        if (savedWordList) {
-          savedWordList.forEach((idx) => {
-            displayArr[idx] = true;
-          });
-        }
-        setDisplayArr(displayArr);
-      } catch (e) {
-        console.log(e);
-      }
-    };
-
-    useEffect(() => {
-      console.log("use effect in WordSpace component");
-      loadToDos();
-    }, []);
-
-    function WordFunction(props) {
-      const saveToDos = async (toSave) => {
-        await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(toSave));
-      };
-
-      const _bookmark = useState(props.bookMark);
-      let bookmark = _bookmark[0];
-      const setbookmark = _bookmark[1];
-
-      const _mode = useState("word");
-      const mode = _mode[0];
-      const setMode = _mode[1];
-
-      let word = props.word;
-      let explain = props.explain;
-      let wordindex = props.idx;
-      let display = word;
-      if (mode === "word") {
-        display = word;
-      }
-      else if (mode === "explain") {
-        display = explain;
-      }
-
-      return (
-        <div id={wordindex} >
-          <WordComponent word={display} bookMark={bookmark} onChangeMode={() => {
-            if (mode === "word") {
-              setMode("explain");
-            } else if (mode === "explain") {
-              setMode("word");
-            }
-          }} onChangeBookMark={() => {
-            if (bookmark === "☆") {
-              setbookmark("★");
-              AsyncStorage.setItem(wordindex, "true");
-              if (wordList != null) {
-                wordList = [...wordList, wordindex];
-              } else {
-                wordList = [wordindex];
-              }
-              saveToDos(wordList);
-              setWordList(wordList);
-              setDisplayArr({ ...DisplayArr, [wordindex]: true });
-            } else if (bookmark === "★") {
-              setbookmark("☆");
-              let filtered = wordList.filter((element) => element !== wordindex);
-              saveToDos(filtered);
-              setWordList(filtered);
-              setDisplayArr({ ...DisplayArr, [wordindex]: false });
-            }
-          }}></WordComponent>
-        </div>
-      )
-    }
-
-    return (
-      <div className="wordListCss">
-        {props.bookMarkPage && (
-          <QuizComponent
-            bgcolor={props.bgcolor}
-            wordData={wordData}
-            wordList={wordList}
-            login={props.login}
-          >
-          </QuizComponent>
-        )}
-        {props.bookMarkPage === false ?
-          wordList === null ?
-            wordData.map((word, index) => (
-              <WordFunction word={word.word} explain={word.explain} Abbreviation={word.Abbreviation} idx={word.idx} bookMark='☆'></WordFunction>
-            ))
-            :
-            wordData.map((word, index) => (
-              DisplayArr[word.idx] === true ?
-                <WordFunction word={word.word} explain={word.explain} Abbreviation={word.Abbreviation} idx={word.idx} bookMark='★'></WordFunction>
-                :
-                <WordFunction word={word.word} explain={word.explain} Abbreviation={word.Abbreviation} idx={word.idx} bookMark='☆'></WordFunction>
-            ))
-          :
-          wordData.map((word, index) => (
-            DisplayArr[word.idx] === true ?
-              <WordFunction word={word.word} explain={word.explain} Abbreviation={word.Abbreviation} idx={word.idx} bookMark='★'></WordFunction>
-              :
-              <a></a>
-          ))
-        }
-
-      </div>
-    );
-  }
 
   // 애플리케이션 초기화 시, AsyncStorage에서 테마 값을 불러와 설정
   useEffect(() => {
